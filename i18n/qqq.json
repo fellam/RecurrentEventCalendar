@@ -1,0 +1,31 @@
+{
+	"@metadata": {
+		"authors": [
+			"F.trott",
+			"Raymond",
+			"Shirayuki"
+		]
+	},
+	"recurrenteventcalendar-desc": "{{desc|name=Semantic Page Series|url=http://www.mediawiki.org/wiki/Extension:RecurrentEventCalendar}}",
+	"recsuccesstitle": "The title of a page containing a success message.\n\nParameters:\n* $1 - will contain the category of pages to be created, e.g. Event",
+	"recsuccess": "A success message. Parameters:\n* $1 - number of pages",
+	"recsuccess-returntoorigin": "Provides navigation back to the origin page. Parameters:\n* $1 - the origin page title, with link",
+	"recerror": "The title of en error page",
+	"recerror-diffnotsupported": "An error message",
+	"recerror-previewnotsupported": "An error message",
+	"recerror-noiteratorname": "An error message. See the [[wikipedia:Iterator | wikipedia page]] for the meaning of iterator. The name of the parameter in quotes should not be translated!",
+	"recerror-iteratorunknown": "{{doc-important|The name of the parameter \"<code>iterator</code>\" in quotes should not be translated!}}\nUsed as fatal error message.\n\nSee the [[wikipedia:Iterator | wikipedia page]] for the meaning of iterator.\n\nParameters:\n* $1 - iterator name",
+	"recerror-noformname": "An error message. The name of the parameter in quotes should not be translated!",
+	"recerror-formunknown": "Used as fatal error message. Parameters:\n* $1 - form name",
+	"recerror-notargetformname": "An error message. The name of the parameter in quotes should not be translated!",
+	"recerror-notargetfieldname": "An error message. The name of the parameter in quotes should not be translated!",
+	"recerror-iteratorparammissing": "{{doc-important|Do not translate \"<code>#reclink</code>\".}}\nAn error message. See the [[wikipedia:Iterator | wikipedia page]] for the meaning of iterator.\n\nParameters:\n* $1 - list of error messages (unordered list)",
+	"recerror-noiteratordata": "An error message. See the [[wikipedia:Iterator | wikipedia page]] for the meaning of iterator.",
+	"recerror-pagegenerationlimitexeeded": "Used as error message. Parameters:\n* $1 - number of pages (number of iterator values)\n* $2 - limit number of pages",
+	"recerror-date-startdatemissing": "An error message",
+	"recerror-date-internalerror": "An error message. \"the dates\" doesn't contain times. Parameters:\n* $1 - \"Unknown error. This could be due to a malformed start or end date.\" (in English), or a list of errors",
+	"recerror-count-startvaluemalformed": "An error message",
+	"recerror-count-endvaluemalformed": "An error message",
+	"recerror-count-stepvaluemalformed": "An error message",
+	"recerror-count-digitsvaluemalformed": "An error message"
+}

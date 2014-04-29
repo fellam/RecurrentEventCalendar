@@ -1,0 +1,29 @@
+{
+    "@metadata": {
+        "authors": [
+            "F.trott"
+        ]
+    },
+    "recurrenteventcalendar-desc": "Creating a series of pages from one [https://www.mediawiki.org/wiki/Extension:Semantic_Forms Semantic Form]",
+    "recsuccesstitle": "Creating $1 pages",
+    "recsuccess": "{{PLURAL:$1|One page|$1 pages}} will be created.",
+    "recsuccess-returntoorigin": "Return to $1",
+    "recerror": "An error occurred",
+    "recerror-diffnotsupported": "The diff action is not supported for page series.",
+    "recerror-previewnotsupported": "The preview action is not supported for page series.",
+    "recerror-noiteratorname": "No iterator specified. You have to set the parameter \"iterator\" in the #reclink parser function call.",
+    "recerror-iteratorunknown": "Iterator \"$1\" does not exist. You have to correct the parameter \"iterator\" in the #reclink parser function call.",
+    "recerror-noformname": "No form name given. You have to set the parameter \"form\" in the #reclink parser function.",
+    "recerror-formunknown": "Form \"$1\" does not exist.",
+    "recerror-notargetformname": "No target form name given. You have to set the parameter \"target form\" in the #reclink parser function call.",
+    "recerror-notargetfieldname": "No target field name given. You have to set the parameter \"target field\" in the #reclink parser function call.",
+    "recerror-iteratorparammissing": "The following iterator parameters are missing in the #reclink call:\n$1",
+    "recerror-noiteratordata": "No iterator parameters found in the sent data.",
+    "recerror-pagegenerationlimitexeeded": "You tried to generate {{PLURAL:$1|one page|$1 pages}}. This exceeds your allowed limit of {{PLURAL:$2|one page|$2 pages}}.",
+    "recerror-date-startdatemissing": "The start date is missing.",
+    "recerror-date-internalerror": "An error occurred while creating the dates: $1",
+    "recerror-count-startvaluemalformed": "The start value is not a number.",
+    "recerror-count-endvaluemalformed": "The end value is not a number.",
+    "recerror-count-stepvaluemalformed": "The step value is not a number.",
+    "recerror-count-digitsvaluemalformed": "The digits value is not a number."
+}

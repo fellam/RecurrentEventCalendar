@@ -1,0 +1,29 @@
+{
+	"@metadata": {
+		"authors": [
+			"Beta16"
+		]
+	},
+	"recurrenteventcalendar-desc": "Crea una serie di pagine da un [https://www.mediawiki.org/wiki/Extension:Semantic_Forms Semantic Form]",
+	"recsuccesstitle": "Creazione di pagine $1",
+	"recsuccess": "{{PLURAL:$1|Una pagina|$1 pagine}} saranno create.",
+	"recsuccess-returntoorigin": "Torna a $1",
+	"recerror": "Si è verificato un errore",
+	"recerror-diffnotsupported": "La funzione di differenza non è supportata per le serie di pagine.",
+	"recerror-previewnotsupported": "La funzione di anteprima non è supportata per le serie di pagine.",
+	"recerror-noiteratorname": "Nessun iteratore specificato. È necessario impostare il parametro \"iterator\" nella chiamata alla funzione parser #reclink.",
+	"recerror-iteratorunknown": "Iteratore \"$1\" non esiste. È necessario correggere il parametro \"iterator\" nella chiamata alla funzione parser #reclink.",
+	"recerror-noformname": "Nessun nome del modulo specificato. È necessario impostare il parametro \"form\" nella chiamata alla funzione parser #reclink.",
+	"recerror-formunknown": "Modulo \"$1\" non esiste.",
+	"recerror-notargetformname": "Nessun nome del modulo di destinazione specificato. È necessario impostare il parametro \"target form\" nella chiamata alla funzione parser #reclink.",
+	"recerror-notargetfieldname": "Nessun nome del campo di destinazione specificato. È necessario impostare il parametro \"target field\" nella chiamata alla funzione parser #reclink.",
+	"recerror-iteratorparammissing": "I seguenti parametri di iterazione sono mancanti nella chiamata alla funzione #reclink:\n$1",
+	"recerror-noiteratordata": "Nessun parametro di iterazione trovato nei dati inviati.",
+	"recerror-pagegenerationlimitexeeded": "Si è cercando di generare {{PLURAL:$1|una pagina|$1 pagine}}. Questo supera il limite consentito di {{PLURAL:$2|una pagina|$2 pagine}}.",
+	"recerror-date-startdatemissing": "Manca la data di inizio.",
+	"recerror-date-internalerror": "Si è verificato un errore durante la creazione delle date: $1",
+	"recerror-count-startvaluemalformed": "Il valore iniziale non è un numero.",
+	"recerror-count-endvaluemalformed": "Il valore finale non è un numero.",
+	"recerror-count-stepvaluemalformed": "Il valore di incremento non è un numero.",
+	"recerror-count-digitsvaluemalformed": "Il valore di cifre non è un numero."
+}
