@@ -35,7 +35,7 @@ define( 'REC_VERSION', '0.1.0 alpha' );
 $wgExtensionCredits['semantic'][] = array(
 	'path' => __FILE__,
 	'name' => 'Recurrent Event Calendar',
-	'author' => '[http://www.mediawiki.org/wiki/User:Michele.Fella]',
+	'author' => '[http://www.mediawiki.org/wiki/User:Michele.Fella Michele Fella]',
 	'url' => 'https://www.mediawiki.org/wiki/Extension:RecurrentEventCalendar',
 	'descriptionmsg' => 'recurrenteventcalendar-desc',
 	'version' => REC_VERSION,
@@ -53,7 +53,7 @@ $wgExtensionMessagesFiles['RecurrentEventCalendarAlias'] = $dir . '/RecurrentEve
 
 // register class files with the Autoloader
 $wgAutoloadClasses['RECUtils'] = $dir . '/includes/RECUtils.php';
-$wgAutoloadClasses['RECSpecialRecurrentEventCalendarEdit'] = $dir . '/includes/RECSpecialRecurrentEventCalendarEdit.php';
+$wgAutoloadClasses['RECSpecialRECEdit'] = $dir . '/includes/RECSpecialRECEdit.php';
 $wgAutoloadClasses['RECException'] = $dir . '/includes/RECException.php';
 $wgAutoloadClasses['RECPageCreationJob'] = $dir . '/includes/RECPageCreationJob.php';
 
@@ -62,7 +62,7 @@ $wgAutoloadClasses['RECDateIterator'] = $dir . '/includes/iterators/RECDateItera
 
 
 // register Special page
-$wgSpecialPages['RecurrentEventCalendarEdit'] = 'RECSpecialRecurrentEventCalendarEdit'; # Tell MediaWiki about the new special page and its class name
+$wgSpecialPages['RecurrentEventCalendarEdit'] = 'RECSpecialRECEdit'; # Tell MediaWiki about the new special page and its class name
 
 // register hook handlers
 

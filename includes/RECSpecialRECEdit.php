@@ -1,7 +1,7 @@
 <?php
 
 /**
- * File holding the RECSpecialRecurrentEventCalendarEdit class
+ * File holding the RECSpecialRECEdit class
  *
  * @author Michele Fella <michele.fella@gmail.com>
  * @file
@@ -12,11 +12,11 @@ if ( !defined( 'REC_VERSION' ) ) {
 }
 
 /**
- * The RECSpecialRecurrentEventCalendarEdit class.
+ * The RECSpecialRECEdit class.
  *
  * @ingroup RecurrentEventCalendar
  */
-class RECSpecialRecurrentEventCalendarEdit extends SpecialPage {
+class RECSpecialRECEdit extends SpecialPage {
 
 	public function __construct() {
 		parent::__construct( 'RecurrentEventCalendarEdit' );
