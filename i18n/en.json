@@ -1,9 +1,11 @@
 {
     "@metadata": {
         "authors": [
-            "F.trott"
+            "F.trott",
+            "Michele.Fella"
         ]
     },
+    "recurrenteventcalendaredit": "Recurrent Event Calendar",
     "recurrenteventcalendar-desc": "Creating a series of pages from one [https://www.mediawiki.org/wiki/Extension:Semantic_Forms Semantic Form]",
     "recsuccesstitle": "Creating $1 pages",
     "recsuccess": "{{PLURAL:$1|One page|$1 pages}} will be created.",
