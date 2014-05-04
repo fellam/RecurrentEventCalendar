@@ -150,7 +150,7 @@ class RECSpecialRECEdit extends SpecialPage {
 		$iteratorName = null;
 		$originPageId = null;
 		
-// 		print "iteratorData=<div>"; print_r($iteratorData); print "</div></br>";
+		print "iteratorData=<div>"; print_r($iteratorData); print "</div></br>";
 // 		print "requestValues=<div>"; print_r($requestValues); print "</div></br>";
 		
 		foreach ( $iteratorData as $param => $value ) {
@@ -180,11 +180,11 @@ class RECSpecialRECEdit extends SpecialPage {
 		// iterator
 		$iterator = new $recgIterators[$iteratorName];	
 // 		print "iteratorParams=<div>"; print_r($iteratorParams); print "</div></br>";
-// 		print " B - iteratorParams['recurrentunit'] = ".$iteratorParams['recurrentunit']."</br>";
-// 		print " B - iteratorParams['recurrentperiod'] = ".$iteratorParams['recurrentperiod']."</br>";
+		print " B - iteratorParams['starttime'] = ".$iteratorParams['starttime']."</br>";
+		print " B - iteratorParams['endtime'] = ".$iteratorParams['endtime']."</br>";
 		$iteratorParams = $iterator->checkValues( $iteratorParams );
-// 		print " A - iteratorParams['recurrentunit'] = ".$iteratorParams['recurrentunit']."</br>";
-// 		print " A - iteratorParams['recurrentperiod'] = ".$iteratorParams['recurrentperiod']."</br>";
+		print " A - iteratorParams['starttime'] = ".$iteratorParams['starttime']."</br>";
+		print " A - iteratorParams['endtime'] = ".$iteratorParams['endtime']."</br>";
 // 		print "iteratorParams=<div>"; print_r($iteratorParams); print "</div></br>";
 		SFAutoeditAPI::addToArray( $requestValues, $iteratorData['isrecurrent'], $iteratorParams['isrecurrent'], true );
 		if ( $iteratorParams['isrecurrent'] === 'No' ) {
@@ -216,8 +216,8 @@ class RECSpecialRECEdit extends SpecialPage {
 		$requestValues['user'] = $wgUser->getId();
 // 		print "BEFORErequestValues=<div>"; print_r($requestValues); print "</div></br>";
 
-// 		print " - recurrentunit = ".$iteratorData['recurrentunit']." - ".$iteratorParams['recurrentunit']."</br>";
-// 		print " - recurrentperiod = ".$iteratorData['recurrentperiod']." - ".$iteratorParams['recurrentperiod']."</br>";
+		print " - starttime = ".$iteratorData['starttime']." - ".$iteratorParams['starttime']."</br>";
+		print " - endtime = ".$iteratorData['endtime']." - ".$iteratorParams['endtime']."</br>";
 		
 		SFAutoeditAPI::addToArray( $requestValues, $iteratorData['startday'], $iteratorParams['startday'], true );
 		SFAutoeditAPI::addToArray( $requestValues, $iteratorData['endday'], $iteratorParams['endday'], true );
@@ -228,8 +228,7 @@ class RECSpecialRECEdit extends SpecialPage {
 		SFAutoeditAPI::addToArray( $requestValues, $iteratorData['recurrentunit'], $iteratorParams['recurrentunit'], true );
 		SFAutoeditAPI::addToArray( $requestValues, $iteratorData['recurrentperiod'], $iteratorParams['recurrentperiod'], true );
 // 		print "AFTERrequestValues=<div>"; print_r($requestValues); print "</div></br>";
-			
-// 		print "eventdate=<div>"; print_r($eventdate); print "</div></br>";
+		
 // 		print "iteratorParams=<div>"; print_r($iteratorParams); print "</div></br>";
 // 		print "iteratorValues=<div>"; print_r($iteratorValues); print "</div></br>";
 		
@@ -239,19 +238,18 @@ class RECSpecialRECEdit extends SpecialPage {
 // 				print " - KEY = ".$key." - startday = ".$iteratorStartValues[$key]." - endday ".$value."</br>";
 // 				print " - EventRecurrentEvery = ".$requestValues['Event']['EventRecurrentEvery']."</br>";
 // 				print " - EventRecurrentPeriod = ".$requestValues['Event']['EventRecurrentPeriod']."</br>";
-				
 				SFAutoeditAPI::addToArray( $requestValues, $iteratorData['startday'], $iteratorStartValues[$key], true );
 				SFAutoeditAPI::addToArray( $requestValues, $iteratorData['endday'], $value, true );
-// 				print "YESrequestValues=<div>"; print_r($requestValues); print "</div></br>";
+				print "YESrequestValues=<div>"; print_r($requestValues); print "</div></br>";
 				wfDebugLog( 'rec', 'Insert RECPageCreationJob' );
-	// 			$job = new RECPageCreationJob( $targetFormTitle, $requestValues );
-	// 			$job->insert();
+				$job = new RECPageCreationJob( $targetFormTitle, $requestValues );
+				$job->insert();
 			}
 		} else if ( $iteratorParams['isrecurrent'] === 'No' ) {
-// 			print "NOrequestValues=<div>"; print_r($requestValues); print "</div></br>";
+			print "NOrequestValues=<div>"; print_r($requestValues); print "</div></br>";
 			wfDebugLog( 'rec', 'Insert RECPageCreationJob' );
-			// 			$job = new RECPageCreationJob( $targetFormTitle, $requestValues );
-			// 			$job->insert();
+			$job = new RECPageCreationJob( $targetFormTitle, $requestValues );
+			$job->insert();
 		} else {
 			throw new RECException( RECUtils::buildMessage( 'recerror-notargetisrecurrent') );
 		}
@@ -265,12 +263,11 @@ class RECSpecialRECEdit extends SpecialPage {
 			$request->setSessionData( 'recResult', $iteratorValuesCount );
 			$request->setSessionData( 'recForm', $targetFormPageId );
 			$request->setSessionData( 'recOrigin', $originPageId );
-// 			header( 'Location: ' . $this->getTitle()->getFullURL() );
+			header( 'Location: ' . $this->getTitle()->getFullURL() );
 		} else {
 			// cookies disabled, write result data to URL
-// 			header( 'Location: ' . $this->getTitle()->getFullURL() . "?$targetFormPageId;$iteratorValuesCount;$originPageId" );
+			header( 'Location: ' . $this->getTitle()->getFullURL() . "?$targetFormPageId;$iteratorValuesCount;$originPageId" );
 		}
-
 		return null;
 	}
 
