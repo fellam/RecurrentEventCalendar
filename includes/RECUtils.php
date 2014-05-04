@@ -45,6 +45,7 @@ class RECUtils {
 	static public function renderreclink( &$parser ) {
 
 		$params = func_get_args();
+// 		print var_dump($params);
 		array_shift( $params ); // We don't need the parser.
 
 		// remove the target parameter should it be present
@@ -57,7 +58,7 @@ class RECUtils {
 			}
 
 		}
-
+		
 		// set the origin parameter
 		// This will block it from use as iterator parameter. Oh well.
 		$params[] = "origin=" . $parser->getTitle()->getArticleID();

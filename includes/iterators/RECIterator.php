@@ -27,8 +27,13 @@ abstract class RECIterator {
 	abstract function getParameterNames();
 	
 	/**
+	 * @return an array of the checked values to be used in the target field of the target form
+	 */
+	abstract function checkValues ( &$data );
+	
+	/**
 	 * @return an array of the values to be used in the target field of the target form
 	 */
-	abstract function getValues ( &$data );
+	abstract function getValues ( $start, $end, $unit, $period );
 	
 }

@@ -23,67 +23,154 @@ class RECDateIterator extends RECIterator {
 	 */
 	function getParameterNames() {
 		return array(
-			'start' => rec_MANDATORY,
-			'end' => rec_OPTIONAL,
-			'period' => rec_OPTIONAL,
-			'unit' => rec_OPTIONAL
-			);
+			'startday' => rec_MANDATORY,
+			'endday' => rec_MANDATORY,
+			'starttime' => rec_MANDATORY,
+			'endtime' => rec_MANDATORY,
+			'isrecurrent' => rec_MANDATORY,
+			'recurrentstart' => rec_MANDATORY,
+			'recurrentend' => rec_MANDATORY,
+			'recurrentunit' => rec_MANDATORY,
+			'recurrentperiod' => rec_MANDATORY
+		);
 	}
 
 	/**
 	 * @return an array of the values to be used in the target field of the target form
 	 */
-	function getValues ( &$data ){
-
-		if ( array_key_exists( 'start', $data ) ) {
-
-			if ( is_string( $data['start'] ) ) {
-
-				// start date provided as a string (e.g. by datepicker input)
-				$start = trim( $data['start'] );
-
-			} else if ( is_array( $data['start']) &&
-				array_key_exists( 'day', $data['start'] ) &&
-				array_key_exists( 'month', $data['start'] ) &&
-				array_key_exists( 'year', $data['start'] ) ) {
-
+	
+	function checkValues ( &$data ){
+// 		print "data=<div>"; print_r($data); print "</div></br>";
+		if ( array_key_exists( 'startday', $data ) ) {
+			$startday = $data['startday'];
+			if ( is_string( $startday ) ) {
+				$startday = explode(' ',$startday);
+				if (count($startday) > 1) {$starttime = trim($startday[1]);}
+				$startday = trim($startday[0]);
+			} else if ( is_array( $startday) &&
+				array_key_exists( 'day', $startday ) &&
+				array_key_exists( 'month', $startday ) &&
+				array_key_exists( 'year', $startday ) ) {
 				// start date provided as an array (e.g. by normal date input)
-				$start = trim( $data['start']['year'] ) . '/' .
-					trim( $data['start']['month'] ) . '/' .
-					trim( $data['start']['day'] ) ;
-
+				$startday = trim( $startday['year'] ) . '/' .
+					trim( $startday['month'] ) . '/' .
+					trim( $startday['day'] ) ;
 			} else {
-				throw new RECException( RECUtils::buildMessage( 'recerror-date-startdatemissing' ) );
+				throw new RECException( RECUtils::buildMessage( 'recerror-date-startdaymissing' ) );
 			}
 		}
-
-		if ( array_key_exists( 'end', $data ) ) {
-
-			if ( is_string( $data['end'] ) ) {
-
-				// end date provided as a string (e.g. by datepicker input)
-				$end = trim( $data['end'] );
-
-			} else if ( is_array( $data['end']) &&
-				array_key_exists( 'day', $data['end'] ) &&
-				array_key_exists( 'month', $data['end'] ) &&
-				array_key_exists( 'year', $data['end'] ) ) {
-
-				// start date provided as an array (e.g. by normal date input)
-				$end = trim( $data['end']['year'] ) . '/' .
-					trim( $data['end']['month'] ) . '/' .
-					trim( $data['end']['day'] );
-
+		if ( array_key_exists( 'endday', $data ) ) {
+			$endday = $data['endday'];
+			if ( is_string( $endday ) ) {
+				$endday = explode(' ',$endday);
+				if (count($endday) > 1) {$endtime = trim($endday[1]);}
+				$endday = trim($endday[0]);
+			} else if ( is_array( $endday ) &&
+				array_key_exists( 'day', $endday ) &&
+				array_key_exists( 'month', $endday ) &&
+				array_key_exists( 'year', $endday ) ) {
+				$endday = trim( $endday['year'] ) . '/' .
+					trim( $endday['month'] ) . '/' .
+					trim( $endday['day'] );
 			}
-
-			if ( is_null( $end ) || $end === '' ) {
-				$end = $start;
+			if ( is_null( $endday ) || $endday === '' ) {
+				$endday = $startday;
 			}
 		}
+		if ( array_key_exists( 'starttime', $data ) && (is_null($starttime) || ($starttime === '')) ) {
+			$starttime = $data['starttime'];
+			if ( is_string( $starttime ) ) {
+				$starttime = trim( $starttime );
+			} else if ( is_array( $starttime ) &&
+				array_key_exists( 'hour', $starttime ) &&
+				array_key_exists( 'minute', $starttime ) ) {
+				$starttime = trim( $starttime['hour'] ) . ':' .
+						trim( $starttime['minute'] ) ;
+			} 
+			if ( is_null( $starttime ) || $starttime === '' ) {
+				$starttime = '00:00';
+			}
+		}
+		if ( array_key_exists( 'endtime', $data ) && (is_null($endtime) || ($endtime === '')) ) {
+			$endtime = $data['endtime'];
+			if ( is_string( $endtime ) ) {
+				$endtime = trim( $endtime );
+			} else if ( is_array( $endtime ) &&
+			array_key_exists( 'hour', $endtime ) &&
+			array_key_exists( 'minute', $endtime ) ) {
+				$endtime = trim( $endtime['hour'] ) . ':' .
+						trim( $endtime['minute'] );
+			}
+			if ( is_null( $endtime ) || $endtime === '' ) {
+				$endtime = '23:59';
+			}
+		}
+		if ( array_key_exists( 'isrecurrent', $data ) ) {
+			$isrecurrent = $data['isrecurrent'];
+		}else{
+			$isrecurrent = 'No';
+		}
+		if ( $isrecurrent === 'Yes' ) {
+			if ( array_key_exists( 'recurrentstart', $data ) ) {
+				$recurrentstart = $data['recurrentstart'];
+				if ( is_string( $recurrentstart ) ) {
+					$recurrentstart = explode(' ',$recurrentstart);
+					$recurrentstart = trim($recurrentstart[0]);
+				} else if ( is_array( $recurrentstart ) &&
+				array_key_exists( 'day', $recurrentstart ) &&
+				array_key_exists( 'month', $recurrentstart ) &&
+				array_key_exists( 'year', $recurrentstart ) ) {
+					// start date provided as an array (e.g. by normal date input)
+					$recurrentstart = trim( $recurrentstart['year'] ) . '/' .
+							trim( $recurrentstart['month'] ) . '/' .
+							trim( $recurrentstart['day'] ) ;
+				} 
+			}
+			if ( array_key_exists( 'recurrentend', $data ) ) {
+				$recurrentend = $data['recurrentend'];
+				if ( is_string( $recurrentend ) ) {
+					$recurrentend = explode(' ',$recurrentend);
+					$recurrentend = trim($recurrentend[0]);
+				} else if ( is_array( $recurrentend ) &&
+				array_key_exists( 'day', $recurrentend ) &&
+				array_key_exists( 'month', $recurrentend ) &&
+				array_key_exists( 'year', $recurrentend ) ) {
+					// start date provided as an array (e.g. by normal date input)
+					$recurrentend = trim( $recurrentend['year'] ) . '/' .
+							trim( $recurrentend['month'] ) . '/' .
+							trim( $recurrentend['day'] ) ;
+				} 
+			}
+		}
+// 		print "B - recurrentstart = ".$recurrentstart." - recurrentend = ".$recurrentend."</br>";
+		if ( is_null( $recurrentstart ) || $recurrentstart === '' ) {
+			$recurrentstart = $startday;
+		}
+		if ( is_null( $recurrentend ) || $recurrentend === '' ) {
+			$recurrentend = $endday;
+		}
+// 		print "A - recurrentstart = ".$recurrentstart." - recurrentend = ".$recurrentend."</br>";
+		$recurrentperiod = RECUtils::fromArray( $data, 'recurrentperiod', 1 );
+		$recurrentunit   = RECUtils::fromArray( $data, 'recurrentunit', 'day' );
 
-		$period = RECUtils::fromArray( $data, 'period', 1 );
-		$unit   = RECUtils::fromArray( $data, 'unit', 'day' );
+		$values = array(
+			'startday' => $startday,
+			'endday' => $endday,
+			'starttime' => $starttime,
+			'endtime' => $endtime,
+			'isrecurrent' => $isrecurrent,
+			'recurrentstart' => $recurrentstart,
+			'recurrentend' => $recurrentend,
+			'recurrentunit' => $recurrentunit,
+			'recurrentperiod' => $recurrentperiod,
+		);
+		return $values;
+	}
 
+	/**
+	 * @return an array of the values to be used in the target field of the target form
+	 */
+	function getValues ( $start, $end, $unit, $period ){
 		// TODO: SMWSetRecurringEvent does not exist from SMW 1.9 onwards
 		// remove when compatibility to SMW pre1.9 is dropped
 		if ( class_exists( 'SMWSetRecurringEvent' ) ) {
@@ -92,12 +179,12 @@ class RECDateIterator extends RECIterator {
 				'property=SomeDummyProperty',
 				'start=' . $start,
 				'end=' . $end,
-				'period=' . $period,
 				'unit=' . $unit,
+				'period=' . $period,
 			);
-
+			
 			$values = SMWSetRecurringEvent::getDatesForRecurringEvent( $params );
-
+						
 			if ( $values === null ) {
 				throw new RECException( RECUtils::buildMessage( 'recerror-date-internalerror', 'Unknown error. This could be due to a malformed start or end date.' ) );
 			}
@@ -110,8 +197,8 @@ class RECDateIterator extends RECIterator {
 				'property' => array( 'SomeDummyProperty' ),
 				'start' => array( $start ),
 				'end' => array( $end ),
-				'period' => array( $period ),
 				'unit' => array( $unit ),
+				'period' => array( $period ),
 			);
 
 			$settings = SMW\Settings::newFromArray( array(
@@ -120,9 +207,10 @@ class RECDateIterator extends RECIterator {
 			);
 
 			$events = new SMW\RecurringEvents( $params, $settings );
-
+// 			print "events=<div>"; print_r($events); print "</div></br>";
+			
 			$values = $events->getDates();
-
+			
 			if ( $values === null || count( $events->getErrors() ) > 0 ) {
 				throw new RECException( RECUtils::buildMessage( 'recerror-date-internalerror', implode( ' ', $events->getErrors() ) ) );
 			}
@@ -138,4 +226,5 @@ class RECDateIterator extends RECIterator {
 
 		return $values;
 	}
+	
 }

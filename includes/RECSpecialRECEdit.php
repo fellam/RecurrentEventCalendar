@@ -26,7 +26,7 @@ class RECSpecialRECEdit extends SpecialPage {
 		global $wgRequest;
 
 		$this->setHeaders();
-
+// 		print "wgRequest=<div>"; print_r($wgRequest); print "</div>";
 		if ( $wgRequest->getCheck( 'wpDiff' ) ) {
 
 			// no support for the diff action
@@ -70,16 +70,12 @@ class RECSpecialRECEdit extends SpecialPage {
 	}
 
 	private function printForm( &$parameters, WebRequest &$request ) {
-
 		global $wgOut, $sfgFormPrinter;
-
 		// Prepare parameters for SFFormPrinter::formHTML
 		// there is no ONE target page
 		$targetTitle = null;
-
 		// formDefinition
 		$formName = $request->getText( 'form' );
-
 		// if query string did not contain these variables, try the URL
 		if ( $formName === '' ) {
 			$queryparts = explode( '/', $parameters );
@@ -90,22 +86,16 @@ class RECSpecialRECEdit extends SpecialPage {
 				throw new RECException( RECUtils::buildMessage( 'recerror-noformname' ) );
 			}
 		}
-
 		$formTitle = Title::makeTitleSafe( SF_NS_FORM, $formName );
-
 		if ( !$formTitle->exists() ) {
 			throw new RECException( RECUtils::buildMessage( 'recerror-formunknown', $formName ) );
 		}
-
 		$formArticle = new Article( $formTitle );
 		$formDefinition = StringUtils::delimiterReplace( '<noinclude>', '</noinclude>', '', $formArticle->getContent() );
-
 		// formSubmitted
 		$formSubmitted = false;
-
 		// pageContents
 		$pageContents = null;
-
 		// get 'preload' query value, if it exists
 		if ( $request->getCheck( 'preload' ) ) {
 			$pageContents = SFFormUtils::getPreloadedText( $request->getVal( 'preload' ) );
@@ -113,17 +103,13 @@ class RECSpecialRECEdit extends SpecialPage {
 			// let other extensions preload the page, if they want
 			wfRunHooks( 'sfEditFormPreloadText', array(&$pageContents, $targetTitle, $formTitle) );
 		}
-
 		// pageIsSource
 		$pageIsSource = ( $pageContents != null );
-
 		// get the iterator parameters
 		$iteratorData = $this->buildIteratorParameters( $request );
-
 		// Call SFFormPrinter::formHTML
 		list ( $formText, $javascriptText, $dataText, $formPageTitle, $generatedPageName ) =
 			$sfgFormPrinter->formHTML( $formDefinition, $formSubmitted, $pageIsSource, $formArticle->getID(), $pageContents );
-
 		// Set Special page main header;
 		// override the default title for this page if a title was specified in the form
 		if ( $formPageTitle != null ) {
@@ -131,58 +117,48 @@ class RECSpecialRECEdit extends SpecialPage {
 		} else {
 			$wgOut->setPageTitle( RECUtils::buildMessage( 'sf_formedit_createtitlenotarget', $formTitle->getText() ) );
 		}
-
 		$preFormHtml = '';
 		wfRunHooks( 'sfHTMLBeforeForm', array(&$targetTitle, &$preFormHtml) );
-
 		$text = '<form name="createbox" id="sfForm" action="" method="post" class="createbox">'
 			. $preFormHtml
 			. "\n"
 			. Html::hidden( 'iteratordata', $iteratorData )
+			. Html::hidden( 'formName', $formName )
 			. $formText;
-
 		SFUtils::addJavascriptAndCSS();
-
 		if ( !empty( $javascriptText ) ) {
 			$wgOut->addScript( '		<script type="text/javascript">' . "\n$javascriptText\n" . '</script>' . "\n" );
 		}
-
 		$wgOut->addHTML( $text );
-
 		return null;
 	}
 
 	private function evaluateForm( WebRequest &$request ) {
-
 		global $wgUser, $recgIterators;
-
 		$requestValues = $_POST;
-
+// 		print "requestValues=<div>"; print_r($requestValues); print "</div></br>";
 		if ( array_key_exists( 'iteratordata', $requestValues ) ) {
 			$iteratorData = FormatJson::decode( $requestValues['iteratordata'], true );
 			unset( $requestValues['iteratordata'] );
 		} else {
 			throw new RECException(  RECUtils::buildMessage( 'recerror-noiteratordata' ) );
 		}
-
+		if ( array_key_exists( 'keep_parameters', $requestValues ) ) {
+			$keepParameters = FormatJson::decode( $requestValues['keep_parameters'], false );
+		}
+		$targetFormName = $request->getText( 'formName' );
 		$iteratorName = null;
-		$targetFormName = null;
-		$targetFieldName = null;
 		$originPageId = null;
-		$keepParameters = false;
-
+		
+// 		print "iteratorData=<div>"; print_r($iteratorData); print "</div></br>";
+// 		print "requestValues=<div>"; print_r($requestValues); print "</div></br>";
+		
 		foreach ( $iteratorData as $param => $value ) {
-
+// 			print($param." => ".$value."</br>");
 			switch ( $param ) {
 				case 'iterator':
 					// iteratorName
 					$iteratorName = $value;
-					break;
-				case 'target_form':
-					$targetFormName = $value;
-					break;
-				case 'target_field':
-					$targetFieldName = $value;
 					break;
 				case 'origin':
 					$originPageId = $value;
@@ -192,41 +168,93 @@ class RECSpecialRECEdit extends SpecialPage {
 					break;
 				default :
 					$iteratorParams[$param] = $this->getAndRemoveFromArray( $requestValues, $value, $keepParameters );
+// 					print " P - ".$param." = ".$value."</br>";
 			}
 		}
-
 		if ( is_null( $iteratorName ) || $iteratorName === '' ) {
 			throw new RECException( RECUtils::buildMessage( 'recerror-noiteratorname' ) );
 		}
-
 		if ( !array_key_exists( $iteratorName, $recgIterators ) ) {
 			throw new RECException( RECUtils::buildMessage( 'recerror-iteratorunknown', $iteratorName ) );
 		}
-
 		// iterator
-		$iterator = new $recgIterators[$iteratorName];
-
-		$iteratorValues = $iterator->getValues( $iteratorParams );
-		$iteratorValuesCount = count( $iteratorValues );
-		$userlimit = $this->getPageGenerationLimit();
-
-		// check userlimit
-		if ( $iteratorValuesCount > $userlimit ) {
-			throw new RECException( RECUtils::buildMessage( 'recerror-pagegenerationlimitexeeded', $iteratorValuesCount, $userlimit ) );
+		$iterator = new $recgIterators[$iteratorName];	
+// 		print "iteratorParams=<div>"; print_r($iteratorParams); print "</div></br>";
+// 		print " B - iteratorParams['recurrentunit'] = ".$iteratorParams['recurrentunit']."</br>";
+// 		print " B - iteratorParams['recurrentperiod'] = ".$iteratorParams['recurrentperiod']."</br>";
+		$iteratorParams = $iterator->checkValues( $iteratorParams );
+// 		print " A - iteratorParams['recurrentunit'] = ".$iteratorParams['recurrentunit']."</br>";
+// 		print " A - iteratorParams['recurrentperiod'] = ".$iteratorParams['recurrentperiod']."</br>";
+// 		print "iteratorParams=<div>"; print_r($iteratorParams); print "</div></br>";
+		SFAutoeditAPI::addToArray( $requestValues, $iteratorData['isrecurrent'], $iteratorParams['isrecurrent'], true );
+		if ( $iteratorParams['isrecurrent'] === 'No' ) {
+			$iteratorStartValues = $iterator->getValues( $iteratorParams['startday'], $iteratorParams['endday'], $iteratorParams['recurrentunit'], $iteratorParams['recurrentperiod'] );
+			$iteratorEndValues = $iterator->getValues( $iteratorParams['endday'], $iteratorParams['endday'], $iteratorParams['recurrentunit'], $iteratorParams['recurrentperiod'] );
+// 			print "iteratorStartValues=<div>"; print_r($iteratorStartValues); print "</div></br>";
+// 			print "iteratorEndValues=<div>"; print_r($iteratorEndValues); print "</div></br>";
+			$iteratorParams['startday'] = $iteratorStartValues[0];
+			$iteratorParams['endday'] = $iteratorEndValues[0];
+// 			print "iteratorParams['startday']=<div>"; print_r($iteratorParams['startday']); print "</div></br>";
+// 			print "iteratorParams['endday']=<div>"; print_r($iteratorParams['endday']); print "</div></br>";
+			$iteratorValuesCount = 1;
+		} else if ( $iteratorParams['isrecurrent'] === 'Yes' ) {
+			$iteratorStartValues = $iterator->getValues( $iteratorParams['startday'], $iteratorParams['recurrentend'], $iteratorParams['recurrentunit'], $iteratorParams['recurrentperiod'] );
+			$iteratorEndValues = $iterator->getValues( $iteratorParams['endday'], $iteratorParams['recurrentend'], $iteratorParams['recurrentunit'], $iteratorParams['recurrentperiod'] );
+// 			$iteratorParams['startday'] = $iteratorStartValues[0];
+// 			$iteratorParams['endday'] = $iteratorEndValues[count($iteratorEndValue)-1];
+// 			$iteratorParams['recurrentstart'] = $iteratorStartValues[0];
+// 			$iteratorParams['recurrentend'] = $iteratorEndValues[count($iteratorEndValue)-1];
+			$iteratorValuesCount = count( $iteratorEndValues );
+			$userlimit = $this->getPageGenerationLimit();
+			// check userlimit
+			if ( $iteratorValuesCount > $userlimit ) {
+				throw new RECException( RECUtils::buildMessage( 'recerror-pagegenerationlimitexeeded', $iteratorValuesCount, $userlimit ) );
+			}	
 		}
-
 		$targetFormTitle = Title::makeTitleSafe( SF_NS_FORM, $targetFormName );
 		$targetFormPageId = $targetFormTitle->getArticleID();
-
 		$requestValues['user'] = $wgUser->getId();
+// 		print "BEFORErequestValues=<div>"; print_r($requestValues); print "</div></br>";
 
-		foreach ( $iteratorValues as $value ) {
-			SFAutoeditAPI::addToArray( $requestValues, $targetFieldName, $value, true );
+// 		print " - recurrentunit = ".$iteratorData['recurrentunit']." - ".$iteratorParams['recurrentunit']."</br>";
+// 		print " - recurrentperiod = ".$iteratorData['recurrentperiod']." - ".$iteratorParams['recurrentperiod']."</br>";
+		
+		SFAutoeditAPI::addToArray( $requestValues, $iteratorData['startday'], $iteratorParams['startday'], true );
+		SFAutoeditAPI::addToArray( $requestValues, $iteratorData['endday'], $iteratorParams['endday'], true );
+		SFAutoeditAPI::addToArray( $requestValues, $iteratorData['starttime'], $iteratorParams['starttime'], true );
+		SFAutoeditAPI::addToArray( $requestValues, $iteratorData['endtime'], $iteratorParams['endtime'], true );
+		SFAutoeditAPI::addToArray( $requestValues, $iteratorData['recurrentstart'], $iteratorParams['recurrentstart'], true );
+		SFAutoeditAPI::addToArray( $requestValues, $iteratorData['recurrentend'], $iteratorParams['recurrentend'], true );
+		SFAutoeditAPI::addToArray( $requestValues, $iteratorData['recurrentunit'], $iteratorParams['recurrentunit'], true );
+		SFAutoeditAPI::addToArray( $requestValues, $iteratorData['recurrentperiod'], $iteratorParams['recurrentperiod'], true );
+// 		print "AFTERrequestValues=<div>"; print_r($requestValues); print "</div></br>";
+			
+// 		print "eventdate=<div>"; print_r($eventdate); print "</div></br>";
+// 		print "iteratorParams=<div>"; print_r($iteratorParams); print "</div></br>";
+// 		print "iteratorValues=<div>"; print_r($iteratorValues); print "</div></br>";
+		
+		if ( $iteratorParams['isrecurrent'] === 'Yes' ) {
+			foreach ( $iteratorEndValues as $key => $value ) {
+// 				print "YESrequestValues</br>";
+// 				print " - KEY = ".$key." - startday = ".$iteratorStartValues[$key]." - endday ".$value."</br>";
+// 				print " - EventRecurrentEvery = ".$requestValues['Event']['EventRecurrentEvery']."</br>";
+// 				print " - EventRecurrentPeriod = ".$requestValues['Event']['EventRecurrentPeriod']."</br>";
+				
+				SFAutoeditAPI::addToArray( $requestValues, $iteratorData['startday'], $iteratorStartValues[$key], true );
+				SFAutoeditAPI::addToArray( $requestValues, $iteratorData['endday'], $value, true );
+// 				print "YESrequestValues=<div>"; print_r($requestValues); print "</div></br>";
+				wfDebugLog( 'rec', 'Insert RECPageCreationJob' );
+	// 			$job = new RECPageCreationJob( $targetFormTitle, $requestValues );
+	// 			$job->insert();
+			}
+		} else if ( $iteratorParams['isrecurrent'] === 'No' ) {
+// 			print "NOrequestValues=<div>"; print_r($requestValues); print "</div></br>";
 			wfDebugLog( 'rec', 'Insert RECPageCreationJob' );
-			$job = new RECPageCreationJob( $targetFormTitle, $requestValues );
-			$job->insert();
+			// 			$job = new RECPageCreationJob( $targetFormTitle, $requestValues );
+			// 			$job->insert();
+		} else {
+			throw new RECException( RECUtils::buildMessage( 'recerror-notargetisrecurrent') );
 		}
-
 		// if given origin page does not exist use Main page
 		if ( Title::newFromID( $originPageId ) === null ) {
 			$originPageId = Title::newMainPage()->getArticleID();
@@ -237,17 +265,17 @@ class RECSpecialRECEdit extends SpecialPage {
 			$request->setSessionData( 'recResult', $iteratorValuesCount );
 			$request->setSessionData( 'recForm', $targetFormPageId );
 			$request->setSessionData( 'recOrigin', $originPageId );
-			header( 'Location: ' . $this->getTitle()->getFullURL() );
+// 			header( 'Location: ' . $this->getTitle()->getFullURL() );
 		} else {
-
 			// cookies disabled, write result data to URL
-			header( 'Location: ' . $this->getTitle()->getFullURL() . "?$targetFormPageId;$iteratorValuesCount;$originPageId" );
+// 			header( 'Location: ' . $this->getTitle()->getFullURL() . "?$targetFormPageId;$iteratorValuesCount;$originPageId" );
 		}
 
 		return null;
 	}
 
 	private function printSuccessPage( $formId, $createdPages, $originId ) {
+// 		print "printSuccessPage</br>";
 		global $wgOut;
 
 		$originTitle = Title::newFromID( $originId );
@@ -268,83 +296,98 @@ class RECSpecialRECEdit extends SpecialPage {
 	 * @return type
 	 */
 	private function buildIteratorParameters( WebRequest &$request ) {
-
 		global $recgIterators;
-
 		// iteratorName
 		$iteratorName = $request->getVal( 'iterator' );
-
 		if ( is_null( $iteratorName ) ) {
 			throw new RECException( RECUtils::buildMessage( 'recerror-noiteratorname' ) );
 		}
-
 		if ( !array_key_exists( $iteratorName, $recgIterators ) ) {
 			throw new RECException( RECUtils::buildMessage( 'recerror-iteratorunknown', $iteratorName ) );
 		}
-
+// 		print "iteratorName=<div>"; print_r($iteratorName); print "</div></br>";
 		// iterator
 		$iterator = new $recgIterators[$iteratorName];
-
-		// targetFormName
-		$targetFormName = $request->getVal( 'target_form' );
-
 		// keep parameters?
 		$keepParams = $request->getVal( 'keep_parameters' ) !== null;
-
-		if ( is_null( $targetFormName ) ) {
-			throw new RECException( RECUtils::buildMessage( 'recerror-notargetformname' ) );
+		// startdate
+		$startdate = $request->getVal( 'startday' );
+		if ( is_null( $startdate ) ) {
+			throw new RECException( RECUtils::buildMessage( 'recerror-notargetstartdate' ) );
 		}
-
-		// targetFormTitle is not really needed at this stage,
-		// but we throw an error early if it does not exist
-		$targetFormTitle = Title::makeTitleSafe( SF_NS_FORM, $targetFormName );
-
-		if ( !$targetFormTitle->exists() ) {
-			throw new RECException( RECUtils::buildMessage( 'recerror-formunknown', $targetFormName ) );
+		// enddate
+		$enddate = $request->getVal( 'endday' );
+		if ( is_null( $enddate ) ) {
+			throw new RECException( RECUtils::buildMessage( 'recerror-notargetenddate' ) );
 		}
-
-		// targetFieldName
-		$targetFieldName = $request->getVal( 'target_field' );
-
-		if ( is_null( $targetFieldName ) ) {
-			throw new RECException( RECUtils::buildMessage( 'recerror-notargetfieldname' ) );
+		// starttime
+		$starttime = $request->getVal( 'starttime' );
+		if ( is_null( $starttime ) ) {
+			throw new RECException( RECUtils::buildMessage( 'recerror-notargetstarttime' ) );
 		}
-
+		// endtime
+		$endtime = $request->getVal( 'endtime' );
+		if ( is_null( $endtime ) ) {
+			throw new RECException( RECUtils::buildMessage( 'recerror-notargetendtime' ) );
+		}
+		// isrecurrent
+		$isrecurrent = $request->getVal( 'isrecurrent' );
+		if ( is_null( $isrecurrent ) ) {
+			throw new RECException( RECUtils::buildMessage( 'recerror-notargetisrecurrent' ) );
+		}
+		// recurrentstart
+		$recurrentstart = $request->getVal( 'recurrentstart' );
+		if ( is_null( $recurrentstart ) ) {
+			throw new RECException( RECUtils::buildMessage( 'recerror-notargetrecurrentstart' ) );
+		}
+		// recurrentend
+		$recurrentend = $request->getVal( 'recurrentend' );
+		if ( is_null( $recurrentend ) ) {
+			throw new RECException( RECUtils::buildMessage( 'recerror-notargetrecurrentend' ) );
+		}
+		// recurrentevery
+		$recurrentevery = $request->getVal( 'recurrentunit' );
+		if ( is_null( $recurrentevery ) ) {
+			throw new RECException( RECUtils::buildMessage( 'recerror-notargetrecurrentunit' ) );
+		}
+		// recurrentperiod
+		$recurrentperiod = $request->getVal( 'recurrentperiod' );
+		if ( is_null( $recurrentperiod ) ) {
+			throw new RECException( RECUtils::buildMessage( 'recerror-notargetrecurrentperiod' ) );
+		}
 		$params = array(
 			'iterator' => $iteratorName,
-			'target_form' => $targetFormName,
-			'target_field' => $targetFieldName,
+			'startday' => $startdate,
+			'endday' => $enddate,
+			'starttime' => $starttime,
+			'endtime' => $endtime,
+			'isrecurrent' => $isrecurrent,
+			'recurrentstart' => $recurrentstart,
+			'recurrentend' => $recurrentend,
+			'recurrentunit' => $recurrentevery,
+			'recurrentperiod' => $recurrentperiod,
 			'origin' => $request->getVal( 'origin' )
 		);
-
 		if ($keepParams) {
 			$params['keep_parameters'] = true;
 		}
-
 		// add the iterator-specific values
 		$paramNames = $iterator->getParameterNames();
 		$errors = '';
-
 		foreach ( $paramNames as $paramName => $paramOptional ) {
-
 			$param = $request->getVal( $paramName );
-
 			if ( is_null( $param )  ) {
-
 				if ( $paramOptional === rec_MANDATORY) {
 					// mandatory parameter missing
 					$errors .= "* $paramName\n";
 				}
-
 			} else {
 				$params[$paramName] = $param;
 			}
 		}
-
 		if ( $errors !== '' ) {
 			throw new RECException( RECUtils::buildMessage( 'recerror-iteratorparammissing', $errors ) );
 		}
-
 		return FormatJson::encode( $params );
 	}
 
@@ -359,7 +402,6 @@ class RECSpecialRECEdit extends SpecialPage {
 	 * @param type $toplevel
 	 */
 	private function getAndRemoveFromArray( &$array, $key, $keepParameters = false, $toplevel = true ) {
-
 		$matches = array();
 
 		if ( array_key_exists( $key, $array ) ) {
@@ -397,6 +439,7 @@ class RECSpecialRECEdit extends SpecialPage {
 	}
 
 	public function getPageGenerationLimit() {
+// 		print "getPageGenerationLimit</br>";
 		global $wgUser, $recgPageGenerationLimits;
 
 		$limit = 0;
