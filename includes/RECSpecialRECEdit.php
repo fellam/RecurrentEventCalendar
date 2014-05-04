@@ -24,46 +24,30 @@ class RECSpecialRECEdit extends SpecialPage {
 
 	public function execute( $parameters ) {
 		global $wgRequest;
-
 		$this->setHeaders();
-// 		print "wgRequest=<div>"; print_r($wgRequest); print "</div>";
 		if ( $wgRequest->getCheck( 'wpDiff' ) ) {
-
 			// no support for the diff action
 			throw new RECException( RECUtils::buildMessage( 'recerror-diffnotsupported' ) );
-
 		} elseif ( $wgRequest->getCheck( 'wpPreview' ) ) {
-
 			// no support for the preview action
 			throw new RECException( RECUtils::buildMessage( 'recerror-previewnotsupported' ) );
-
 		} elseif ( $wgRequest->getCheck( 'wpSave' ) ) {
-
 			// saving requested
 			$this->evaluateForm( $wgRequest );
-
 		} elseif ( isset( $_SESSION ) && count( $_SESSION ) > 0 && isset( $_SESSION['recForm'] ) && isset( $_SESSION['recResult'] ) ) {
-
 			// cookies enabled and result data stored
 			$this->printSuccessPage( $_SESSION['recForm'], $_SESSION['recResult'], $_SESSION['recOrigin'] );
-
 			unset( $_SESSION['recForm'] );
 			unset( $_SESSION['recResult'] );
 			unset( $_SESSION['recOrigin'] );
-
 		} elseif ( ( !isset( $_SESSION ) || count( $_SESSION ) ) && count( $_GET ) === 2 ) {
-
 			// cookies disabled, try getting result data from URL
-
 			$get = $_GET;
 			unset( $get['title'] );
 			$get = array_keys($get);
 			$get = explode( ';', $get[0], 3);
-
 			$this->printSuccessPage( $get[0], $get[1], $get[2] );
-
 		} else {
-
 			// no action requested, show form
 			$this->printForm( $parameters, $wgRequest );
 		}
@@ -80,7 +64,6 @@ class RECSpecialRECEdit extends SpecialPage {
 		if ( $formName === '' ) {
 			$queryparts = explode( '/', $parameters );
 			$formName = isset( $queryparts[0] ) ? $queryparts[0] : null;
-
 			// if the form name wasn't in the URL either, throw an error
 			if ( is_null( $formName ) || $formName === '' ) {
 				throw new RECException( RECUtils::buildMessage( 'recerror-noformname' ) );
@@ -136,7 +119,6 @@ class RECSpecialRECEdit extends SpecialPage {
 	private function evaluateForm( WebRequest &$request ) {
 		global $wgUser, $recgIterators;
 		$requestValues = $_POST;
-// 		print "requestValues=<div>"; print_r($requestValues); print "</div></br>";
 		if ( array_key_exists( 'iteratordata', $requestValues ) ) {
 			$iteratorData = FormatJson::decode( $requestValues['iteratordata'], true );
 			unset( $requestValues['iteratordata'] );
@@ -149,12 +131,7 @@ class RECSpecialRECEdit extends SpecialPage {
 		$targetFormName = $request->getText( 'formName' );
 		$iteratorName = null;
 		$originPageId = null;
-		
-		print "iteratorData=<div>"; print_r($iteratorData); print "</div></br>";
-// 		print "requestValues=<div>"; print_r($requestValues); print "</div></br>";
-		
 		foreach ( $iteratorData as $param => $value ) {
-// 			print($param." => ".$value."</br>");
 			switch ( $param ) {
 				case 'iterator':
 					// iteratorName
@@ -179,31 +156,17 @@ class RECSpecialRECEdit extends SpecialPage {
 		}
 		// iterator
 		$iterator = new $recgIterators[$iteratorName];	
-// 		print "iteratorParams=<div>"; print_r($iteratorParams); print "</div></br>";
-		print " B - iteratorParams['starttime'] = ".$iteratorParams['starttime']."</br>";
-		print " B - iteratorParams['endtime'] = ".$iteratorParams['endtime']."</br>";
 		$iteratorParams = $iterator->checkValues( $iteratorParams );
-		print " A - iteratorParams['starttime'] = ".$iteratorParams['starttime']."</br>";
-		print " A - iteratorParams['endtime'] = ".$iteratorParams['endtime']."</br>";
-// 		print "iteratorParams=<div>"; print_r($iteratorParams); print "</div></br>";
 		SFAutoeditAPI::addToArray( $requestValues, $iteratorData['isrecurrent'], $iteratorParams['isrecurrent'], true );
 		if ( $iteratorParams['isrecurrent'] === 'No' ) {
 			$iteratorStartValues = $iterator->getValues( $iteratorParams['startday'], $iteratorParams['endday'], $iteratorParams['recurrentunit'], $iteratorParams['recurrentperiod'] );
 			$iteratorEndValues = $iterator->getValues( $iteratorParams['endday'], $iteratorParams['endday'], $iteratorParams['recurrentunit'], $iteratorParams['recurrentperiod'] );
-// 			print "iteratorStartValues=<div>"; print_r($iteratorStartValues); print "</div></br>";
-// 			print "iteratorEndValues=<div>"; print_r($iteratorEndValues); print "</div></br>";
 			$iteratorParams['startday'] = $iteratorStartValues[0];
 			$iteratorParams['endday'] = $iteratorEndValues[0];
-// 			print "iteratorParams['startday']=<div>"; print_r($iteratorParams['startday']); print "</div></br>";
-// 			print "iteratorParams['endday']=<div>"; print_r($iteratorParams['endday']); print "</div></br>";
 			$iteratorValuesCount = 1;
 		} else if ( $iteratorParams['isrecurrent'] === 'Yes' ) {
 			$iteratorStartValues = $iterator->getValues( $iteratorParams['startday'], $iteratorParams['recurrentend'], $iteratorParams['recurrentunit'], $iteratorParams['recurrentperiod'] );
 			$iteratorEndValues = $iterator->getValues( $iteratorParams['endday'], $iteratorParams['recurrentend'], $iteratorParams['recurrentunit'], $iteratorParams['recurrentperiod'] );
-// 			$iteratorParams['startday'] = $iteratorStartValues[0];
-// 			$iteratorParams['endday'] = $iteratorEndValues[count($iteratorEndValue)-1];
-// 			$iteratorParams['recurrentstart'] = $iteratorStartValues[0];
-// 			$iteratorParams['recurrentend'] = $iteratorEndValues[count($iteratorEndValue)-1];
 			$iteratorValuesCount = count( $iteratorEndValues );
 			$userlimit = $this->getPageGenerationLimit();
 			// check userlimit
@@ -214,11 +177,6 @@ class RECSpecialRECEdit extends SpecialPage {
 		$targetFormTitle = Title::makeTitleSafe( SF_NS_FORM, $targetFormName );
 		$targetFormPageId = $targetFormTitle->getArticleID();
 		$requestValues['user'] = $wgUser->getId();
-// 		print "BEFORErequestValues=<div>"; print_r($requestValues); print "</div></br>";
-
-		print " - starttime = ".$iteratorData['starttime']." - ".$iteratorParams['starttime']."</br>";
-		print " - endtime = ".$iteratorData['endtime']." - ".$iteratorParams['endtime']."</br>";
-		
 		SFAutoeditAPI::addToArray( $requestValues, $iteratorData['startday'], $iteratorParams['startday'], true );
 		SFAutoeditAPI::addToArray( $requestValues, $iteratorData['endday'], $iteratorParams['endday'], true );
 		SFAutoeditAPI::addToArray( $requestValues, $iteratorData['starttime'], $iteratorParams['starttime'], true );
@@ -227,26 +185,17 @@ class RECSpecialRECEdit extends SpecialPage {
 		SFAutoeditAPI::addToArray( $requestValues, $iteratorData['recurrentend'], $iteratorParams['recurrentend'], true );
 		SFAutoeditAPI::addToArray( $requestValues, $iteratorData['recurrentunit'], $iteratorParams['recurrentunit'], true );
 		SFAutoeditAPI::addToArray( $requestValues, $iteratorData['recurrentperiod'], $iteratorParams['recurrentperiod'], true );
-// 		print "AFTERrequestValues=<div>"; print_r($requestValues); print "</div></br>";
-		
-// 		print "iteratorParams=<div>"; print_r($iteratorParams); print "</div></br>";
-// 		print "iteratorValues=<div>"; print_r($iteratorValues); print "</div></br>";
-		
 		if ( $iteratorParams['isrecurrent'] === 'Yes' ) {
 			foreach ( $iteratorEndValues as $key => $value ) {
-// 				print "YESrequestValues</br>";
-// 				print " - KEY = ".$key." - startday = ".$iteratorStartValues[$key]." - endday ".$value."</br>";
-// 				print " - EventRecurrentEvery = ".$requestValues['Event']['EventRecurrentEvery']."</br>";
-// 				print " - EventRecurrentPeriod = ".$requestValues['Event']['EventRecurrentPeriod']."</br>";
 				SFAutoeditAPI::addToArray( $requestValues, $iteratorData['startday'], $iteratorStartValues[$key], true );
 				SFAutoeditAPI::addToArray( $requestValues, $iteratorData['endday'], $value, true );
-				print "YESrequestValues=<div>"; print_r($requestValues); print "</div></br>";
+// 				print "YESrequestValues=<div>"; print_r($requestValues); print "</div></br>";
 				wfDebugLog( 'rec', 'Insert RECPageCreationJob' );
 				$job = new RECPageCreationJob( $targetFormTitle, $requestValues );
 				$job->insert();
 			}
 		} else if ( $iteratorParams['isrecurrent'] === 'No' ) {
-			print "NOrequestValues=<div>"; print_r($requestValues); print "</div></br>";
+// 			print "NOrequestValues=<div>"; print_r($requestValues); print "</div></br>";
 			wfDebugLog( 'rec', 'Insert RECPageCreationJob' );
 			$job = new RECPageCreationJob( $targetFormTitle, $requestValues );
 			$job->insert();
@@ -257,7 +206,6 @@ class RECSpecialRECEdit extends SpecialPage {
 		if ( Title::newFromID( $originPageId ) === null ) {
 			$originPageId = Title::newMainPage()->getArticleID();
 		}
-
 		if ( isset( $_SESSION ) ) {
 			// cookies enabled
 			$request->setSessionData( 'recResult', $iteratorValuesCount );
@@ -272,11 +220,8 @@ class RECSpecialRECEdit extends SpecialPage {
 	}
 
 	private function printSuccessPage( $formId, $createdPages, $originId ) {
-// 		print "printSuccessPage</br>";
 		global $wgOut;
-
 		$originTitle = Title::newFromID( $originId );
-
 		$wgOut->setPageTitle( RECUtils::buildMessage( 'recsuccesstitle', Title::newFromID( $formId )->getText() ));
 		$wgOut->addHTML(
 			Html::rawElement( 'p', array( 'class' => 'recsuccess' ), RECUtils::buildMessage( 'recsuccess', $createdPages ) ) .
@@ -302,7 +247,6 @@ class RECSpecialRECEdit extends SpecialPage {
 		if ( !array_key_exists( $iteratorName, $recgIterators ) ) {
 			throw new RECException( RECUtils::buildMessage( 'recerror-iteratorunknown', $iteratorName ) );
 		}
-// 		print "iteratorName=<div>"; print_r($iteratorName); print "</div></br>";
 		// iterator
 		$iterator = new $recgIterators[$iteratorName];
 		// keep parameters?
@@ -400,7 +344,6 @@ class RECSpecialRECEdit extends SpecialPage {
 	 */
 	private function getAndRemoveFromArray( &$array, $key, $keepParameters = false, $toplevel = true ) {
 		$matches = array();
-
 		if ( array_key_exists( $key, $array ) ) {
 			$value = $array[$key];
 			if ( !$keepParameters ) {
@@ -408,7 +351,6 @@ class RECSpecialRECEdit extends SpecialPage {
 			}
 			return $value;
 		} elseif ( preg_match( '/^([^\[\]]*)\[([^\[\]]*)\](.*)/', $key, $matches ) ) {
-
 			// for some reason toplevel keys get their spaces encoded by MW.
 			// We have to imitate that.
 			// FIXME: Are there other cases than spaces?
@@ -417,17 +359,13 @@ class RECSpecialRECEdit extends SpecialPage {
 			} else {
 				$key = $matches[1];
 			}
-
 			if ( !array_key_exists( $key, $array ) ) {
 				return null;
 			}
-
 			$value = $this->getAndRemoveFromArray( $array[$key], $matches[2] . $matches[3], $keepParameters, false );
-
 			if ( empty( $array[$key] ) ) {
 				unset( $array[$key] );
 			}
-
 			return $value;
 		} else {
 			// key not found in array
@@ -436,18 +374,14 @@ class RECSpecialRECEdit extends SpecialPage {
 	}
 
 	public function getPageGenerationLimit() {
-// 		print "getPageGenerationLimit</br>";
 		global $wgUser, $recgPageGenerationLimits;
-
 		$limit = 0;
 		$groups = $wgUser->getEffectiveGroups();
-
 		foreach ( $groups as $group ) {
 			if ( array_key_exists( $group, $recgPageGenerationLimits) ) {
 				$limit = max($limit, $recgPageGenerationLimits[$group]);
 			}
 		}
-
 		return $limit;
 	}
 
