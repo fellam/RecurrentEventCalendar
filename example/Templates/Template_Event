@@ -1,0 +1,159 @@
+<noinclude>
+This is "Event" template that belongs to [[Category:Events]].
+
+It has default form [[Form:Event]].
+
+It should be called in the following format:
+<pre>
+{{Event
+|EventCategory=
+|EventType=
+|EventTitle=
+|EventStartDay=
+|EventEndDay=
+|EventStartTime=
+|EventEndTime=
+|EventRecurrent=
+|EventRecurrentStart=
+|EventRecurrentEnd=
+|EventRecurrentPeriod=
+|EventRecurrentUnit=
+|EventLocation=
+|EventContact=
+|EventTeam=
+|EventCompany=
+|EventDescription=
+}}
+</pre>
+Edit the page to see the template text.
+==Example==
+{{Event
+|EventCategory=Attendance
+|EventType=
+|EventTitle=Title of event
+|EventLocation=Location
+|EventStartDay=2014/01/01
+|EventEndDay=2014/01/07
+|EventStartTime=08:00
+|EventEndTime=10:00
+|EventRecurrent=Yes
+|EventRecurrentStart=2014/01/01
+|EventRecurrentEnd=2014/01/28
+|EventRecurrentPeriod=2
+|EventRecurrentUnit=day
+|EventContact=Fella Michele (Pride Ericsson)
+|EventTeam=
+|EventCompany=
+|EventDescription=Event description
+}}
+----
+{{Event
+|EventCategory=Attendance
+|EventType=
+|EventTitle=Title of event
+|EventLocation=Location
+|EventStartDay=2014/01/01
+|EventEndDay=2014/01/07
+|EventStartTime=08:00
+|EventEndTime=10:00
+|EventRecurrent=No
+|EventRecurrentStart=2014/01/01
+|EventRecurrentEnd=2014/01/28
+|EventRecurrentPeriod=2
+|EventRecurrentUnit=day
+|EventContact=Fella Michele (Pride Ericsson)
+|EventTeam=
+|EventCompany=
+|EventDescription=Event description
+}}
+----
+{{Event
+|EventCategory=Attendance
+|EventType=
+|EventTitle=Title of event
+|EventLocation=Location
+|EventStartDay=2014/01/01
+|EventEndDay=2014/01/01
+|EventStartTime=08:00
+|EventEndTime=10:00
+|EventRecurrent=Yes
+|EventRecurrentStart=2014/01/01
+|EventRecurrentEnd=2014/01/28
+|EventRecurrentPeriod=2
+|EventRecurrentUnit=day
+|EventContact=Fella Michele (Pride Ericsson)
+|EventTeam=
+|EventCompany=
+|EventDescription=Event description
+}}
+{{#formlink:form=Event|link text=Add a new event|link type=button|query string=namespace=Events|new window}}
+</noinclude><includeonly>
+{| class="wikitable" style="width:100%;"
+{{TableHeader|30%|middle|middle|center|Category}}
+{{TableHeader|30%|middle|middle|center|Type}}
+{{TableHeader|30%|middle|middle|center|Recurrent}}
+{{TableTR}}
+{{TableCell||middle|middle|center|{{#if: {{{EventCategory|}}}|[[Has event category::{{{EventCategory|}}}]]}}}}
+{{TableCell||middle|middle|center|{{#if: {{{EventType|}}}|[[Has event type::{{{EventType|}}}]]}}}}
+{{TableCell||middle|middle|center|{{#ifeq: {{{EventRecurrent|}}}|Yes|{{RecurrentToString|{{{EventRecurrentStart}}}|{{{EventRecurrentEnd}}}|{{{EventRecurrentPeriod|}}}|{{{EventRecurrentUnit|}}}}}|{{{EventRecurrent|}}}}}}}
+|}
+{| class="wikitable" style="width:100%;"
+{{TableHeader|100px|middle|middle|center|Title}}
+{{TableCell||middle|middle|left|[[Has event title::{{{EventTitle|}}}]]}}
+{{TableTR}}
+{{TableHeader|100px|middle|middle|center|When}} 
+{{TableCell||middle|middle|left|{{#ifeq: {{{EventStartDay|}}}|{{{EventEndDay|}}}| on [[Has event start::Has event end::{{{EventStartDay|}}}]] between [[Has event start time::{{{EventStartTime|}}}]] and [[Has event end time::{{{EventEndTime|}}}]] | from [[Has event start::{{{EventStartDay|}}}]] [[Has event start time::{{{EventStartTime|}}}]] until [[Has event end::{{{EventEndDay|}}}]] [[Has event end time::{{{EventEndTime|}}}]]}}}}
+{{#if: {{{EventLocation|}}}
+| {{TableTR}} 
+{{TableHeader|100px|middle|middle|center|Location}} 
+{{TableCell||middle|middle|left|{{AddNamespace|{{{EventLocation|}}}|,|Places|Location}}}}
+{{#set:|Location=Location:{{{EventLocation|}}}}}
+}} 
+{{#if: {{{EventContact|}}}
+| {{TableTR}}
+{{TableHeader|100px|middle|middle|center|Contact}} 
+{{TableCell||middle|middle|left|{{AddNamespace|{{{EventContact|}}}|,|People|Contact}}}}
+}}
+{{#if: {{{EventTeam|}}}
+| {{TableTR}}
+{{TableHeader|100px|middle|middle|center|Team}} 
+{{TableCell||middle|middle|left|{{AddNamespace|{{{EventTeam|}}}|,|Team|Team}}}}
+| {{#if: {{{EventContact|}}}
+| {{TableTR}} 
+{{TableHeader|100px|middle|middle|center|Team}}
+{{TableCell||middle|middle|left|{{AddNamespace|{{#arraymap:{{{EventContact|}}}|,|x|{{TeamByContact|x}}|,}}|,|Team|Team}}}}
+}}
+}}
+{{#if: {{{EventCompany|}}}
+| {{TableTR}} 
+{{TableHeader|100px|middle|middle|center|Company}} 
+{{TableCell||middle|middle|left|{{AddNamespace|{{{EventCompany|}}}|,|Company|Company}}}}
+| {{#if: {{{EventContact|}}}
+| {{TableTR}} 
+{{TableHeader|100px|middle|middle|center|Company}} 
+{{TableCell||middle|middle|left|{{AddNamespace|{{#arraymap:{{{EventContact|}}}|,|x|{{CompanyByContact|x}}|,}}|,|Company|Company}}}}
+}}
+}}
+|}
+{| class="wikitable" style="width:100%;"
+{{TableHeader|100px|middle|middle|left|Description}} 
+{{TableCell||middle|middle|left|[[Has event description::{{{EventDescription|}}}]]}}
+|} 
+{{#set:
+|Category={{{EventCategory|}}} 
+|Type={{{EventType|}}}
+|Title={{{EventTitle|}}}
+|Has event location={{{EventLocation|}}}
+|Start={{{EventStartDay|}}} {{{EventStartTime|}}}
+|End={{{EventEndDay|}}} {{{EventEndTime|}}}
+|Recurrent={{{EventRecurrent|}}}
+|Has event recurrent={{{EventRecurrent|}}}
+|Recurrence start={{{EventRecurrentStart|}}}
+|Recurrence end={{{EventRecurrentEnd|}}}
+|Description={{{EventDescription|}}}
+|Has event icon={{GetEventIcon|{{{EventCategory|}}}|{{{EventType|}}}}}
+|Has event color=#{{GetEventColor|{{{EventCategory|}}}|{{{EventType|}}}}}
+}}
+[[Category:Events]][[Category:{{{EventCategory}}}]]{{#if: {{{EventType|}}}|[[Category:{{{EventType}}}]]}}
+__NOFACTBOX__ 
+</includeonly>

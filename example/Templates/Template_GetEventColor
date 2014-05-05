@@ -1,0 +1,58 @@
+<noinclude>
+This is "GetEventColor" template returns the color for a specific event.
+It should be called in the following format:
+<pre>
+<nowiki>#</nowiki>{{GetEventColor|EventCategory|EventType}}
+</pre>
+
+Additional <nowiki>#</nowiki> character should be defined in the called page within nowiki tag.
+Edit the page to see the template text.
+==Example==
+<nowiki>#</nowiki>{{GetEventColor|Meeting}}
+
+<nowiki>#</nowiki>{{GetEventColor|Attendance|Holiday}}
+</noinclude><includeonly>{{#switch: {{{1|}}}
+|Attendance={{#switch: {{{2|}}}
+|Holiday=5D8AA8
+|Health=F0F8FF
+|Time in lieu=E32636
+|Paid leave=E52B50
+|Solidarieta=FFBF00
+|Business trip=A4C639
+|8DB600
+}}
+|Meeting=FBCEB1
+|Task=7FFFD4
+|Change management={{#switch: {{{2|}}}
+|Canvass=E9D66B
+|Bug fix=B2BEB5
+|Hot fix=87A96B
+|Cold deploy=FF9966
+|Warm deploy=89CFF0
+|007FFF
+}}
+|Maintenance={{#switch: {{{2|}}}
+|IP=A1CAF1
+|UNIX=F4C2C2
+|WIN=F5F5DC
+|NTW=318CE7
+|DB=DE5D83
+|Configuration=BF94E4
+|Data Cleaning=CD7F32
+|Manual procedure=FFC1CC
+|Platforms matching=E7FEFF
+|Recurrent activity=F0DC82
+|DEB887
+}}
+|Incident={{#switch: {{{2|}}}
+|IP=CC5500
+|UNIX=E9745
+|WIN=BD33A4
+|NTW=ED872D
+|DB=E30022
+|APP=A3C1AD
+|FF0800
+}}
+|Others=FF0800
+|FFFDD0
+}}</includeonly>

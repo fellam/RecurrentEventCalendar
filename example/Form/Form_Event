@@ -1,0 +1,105 @@
+<noinclude>
+This is the "Event" form.
+
+To create a page with this form click the button below.
+
+{{#formlink:form=Event|link text=Add a new event|link type=button|new window}}
+
+==See also ==
+[[Template:Event]]
+[[Category:Events]]
+</noinclude>
+<includeonly>
+<div style="text-align: right; margin-top:-45px; margin-bottom:15px;"> 
+{{{standard input|cancel}}} {{!}} {{{standard input|save|label=Save}}}
+{{{info|page name=Events:<Event[EventCategory]>/<Event[EventStartDay]>:<Event[EventTitle]>|create title=Add new event}}}
+</div>
+----
+{{{for template|Event}}}
+{| class="wikitable" style="width:100%;"
+{{TableHeader|100px|middle|middle|center|Category}} 
+{{TableCell||middle|middle|left| {{{field|EventCategory|input type=dropdown|show on select=
+Attendance=>AttendanceType;
+Meeting=>Location;
+Change management=>ChangeType;
+Maintenance=>MaintenanceType;
+Incident=>IncidentType;
+|property=Has event category|mandatory}}} }}
+|}
+<div id="AttendanceType" align="center">
+{| class="wikitable" style="width:100%;"
+{{TableTR}}
+{{TableHeader|100px|middle|middle|center|Type}} 
+{{TableCell||middle|middle|left| {{{field|EventType|input type=dropdown|property=Attendance types|mandatory|show on select=Business trip=>Location;}}} }}
+|}
+</div>
+<div id="ChangeType" align="center">
+{| class="wikitable" style="width:100%;"
+{{TableTR}}
+{{TableHeader|100px|middle|middle|center|Type}} 
+{{TableCell||middle|middle|left| {{{field|EventType|input type=dropdown|property=Change management types|mandatory}}} }}
+|}
+</div>
+<div id="MaintenanceType" align="center">
+{| class="wikitable" style="width:100%;"
+{{TableTR}}
+{{TableHeader|100px|middle|middle|center|Type}} 
+{{TableCell||middle|middle|left| {{{field|EventType|input type=dropdown|property=Maintenance types|mandatory}}} }}
+|}
+</div>
+<div id="IncidentType" align="center">
+{| class="wikitable" style="width:100%;"
+{{TableTR}}
+{{TableHeader|100px|middle|middle|center|Type}} 
+{{TableCell||middle|middle|left| {{{field|EventType|input type=dropdown|property=Incident types|mandatory}}} }}
+|}
+</div>
+{| class="wikitable" style="width:100%;"
+{{TableTR}}
+{{TableHeader|100px|middle|middle|center|Recurrent}} 
+{{TableCell||middle|middle|left| {{{field|EventRecurrent|input type=dropdown|default=No|values=Yes,No|existing values only|mandatory|show on select=Yes=>RecurrentEvent;}}} }} 
+|}  
+----
+{| class="wikitable" style="width:100%;"
+{{TableHeader|100px|middle|middle|center|Title}}
+{{TableCell||middle|middle|left| {{{field|EventTitle|rows=1|input type=textarea with autocomplete|autogrow|values from property=Has event title|property=Has event title|mandatory}}} }}
+{{TableTR}}
+{{TableHeader|100px|middle|middle|center|Start}} 
+{{TableCell||middle|middle|left| {{{field|EventStartDay|input type=datetimepicker|mandatory}}} {{{field|EventStartTime|input type=timepicker|hidden}}} }}
+{{TableTR}}
+{{TableHeader|100px|middle|middle|center|End}} 
+{{TableCell||middle|middle|left| {{{field|EventEndDay|input type=datetimepicker|mandatory}}} {{{field|EventEndTime|input type=timepicker|hidden}}} }}
+|}
+<div id="RecurrentEvent" align="left">
+{| class="wikitable" style="width:100%;"
+{{TableTR}}
+{{TableHeader|100px|middle|middle|center|Repeat every}} 
+{{TableCell||middle|middle|left| {{{field|EventRecurrentPeriod|mandatory|property=Has event period}}} {{{field|EventRecurrentUnit|input type=dropdown|mandatory|property=Has event unit}}} }}
+{{TableHeader|100px|middle|middle|center|until}} 
+{{TableCell||middle|middle|left| {{{field|EventRecurrentStart|input type=datepicker|hidden}}} {{{field|EventRecurrentEnd|input type=datepicker|mandatory}}} }}
+|}
+</div>
+<div id="Location" align="left">
+{| class="wikitable" style="width:100%;"
+{{TableHeader|100px|middle|middle|center|Location}} 
+{{TableCell||middle|middle|left| {{{field|EventLocation|rows=1|input type=textarea with autocomplete|autogrow|values from property=Has event location|property=Has event location|list}}} }}
+|}
+</div>
+{| class="wikitable" style="width:100%;"
+{{TableHeader|100px|middle|middle|center|Contact}} 
+{{TableCell||middle|middle|left| {{{field|EventContact|rows=1|input type=textarea with autocomplete|autogrow|values from namespace=People|existing values only|list}}} }}
+{{TableTR}} 
+{{TableHeader|100px|middle|middle|center|Team}} 
+{{TableCell||middle|middle|left| {{{field|EventTeam|rows=1|input type=textarea with autocomplete|autogrow|values from namespace=Team|existing values only|list}}} }}
+{{TableTR}} 
+{{TableHeader|100px|middle|middle|center|Company}} 
+{{TableCell||middle|middle|left| {{{field|EventCompany|rows=1|input type=textarea with autocomplete|autogrow|values from namespace=Company|existing values only|list}}} }}
+|}
+----
+{| class="wikitable" style="width:100%;"
+{{TableHeader|100px|middle|middle|center|Description}} 
+{{TableCell||middle|middle|left| {{{field|EventDescription|rows=1|mandatory|input type=input type=textarea with autocomplete|autogrow|values from property=Has event description|property=Has event description}}} }}
+|}
+{{{end template}}} 
+__NOFACTBOX__ 
+</includeonly>

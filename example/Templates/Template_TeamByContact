@@ -1,0 +1,11 @@
+<noinclude>
+This is "TeamByContact" template returns the Team of a contact.
+It should be called in the following format:
+<pre>
+{{TeamByContact|Contact}}
+</pre>
+The contact should be a valid contact under People namespace
+Edit the page to see the template text.
+==Example==
+{{TeamByContact|MIK}}
+</noinclude><includeonly>{{#ifexist: People:{{{1|}}} | {{#show: People:{{{1|}}} | ?Has team id}} }}</includeonly>

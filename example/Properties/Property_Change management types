@@ -1,0 +1,8 @@
+This is a property of type [[Has type::Text]].
+
+The allowed value for this property is:
+* [[Allows value::Canvass]]
+* [[Allows value::Bug fix]]
+* [[Allows value::Hot fix]]
+* [[Allows value::Cold deploy]]
+* [[Allows value::Warm deploy]]

@@ -1,0 +1,12 @@
+<noinclude>
+This is "GetEventIcon" template returns the icon for a specific event.
+It should be called in the following format:
+<pre>
+{{GetEventIcon|EventCategory|EventType}}
+</pre>
+Edit the page to see the template text.
+==Example==
+{{GetEventIcon|Meeting|}}
+
+{{GetEventIcon|Attendance|Holiday|}}
+</noinclude><includeonly>{{#ifexist: File:EventIcon{{{1|}}}{{{2|}}} | File:EventIcon{{{1|}}}{{{2|}}} | File:EventIconDefault }}</includeonly>
