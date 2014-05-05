@@ -1,0 +1,7 @@
+This is a property of type [[Has type::Text]].
+
+The allowed values for this property are:
+* [[Allows value::day]]
+* [[Allows value::week]]
+* [[Allows value::month]]
+* [[Allows value::year]]

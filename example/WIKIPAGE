@@ -1,0 +1,246 @@
+{{Extension|templatemode =
+|name          = RecurrentEventCalendar
+|status        = stable
+|type1         = tag
+|type2         = page action
+|type3         = search
+|hook1         = ParserFirstCallInit
+|username      = Michele.Fella
+|author        = Michele Fella <michele.fella@gmail.com>
+|description   = Allows users to generate single or recurrent multiple event calendat pages with one form.
+|image         =
+|imagesize     =
+|version       = 0.1.0
+|update        = 2014-05-05
+|mediawiki     = 1.19+
+|license       = Apache License
+|download      = {{GithubDownload|fellam|RecurrentEventCalendar}}
+|needs-updatephp = No
+|changelog     = 
+|parameters    =
+|tags          = &lt;RecurrentEventCalendar>
+|rights        =
+|example       =
+|compatibility =
+|bugzilla      = RecurrentEventCalendar
+}}
+
+The '''RecurrentEventCalendar''' extension allows user to generate single or recurrent multiple event calendat pages with one form.
+
+In order to work users should define:
+
+	# a Template for a single event representing the following information:
+	
+	EventStartDay: Defines the day when the single event starts
+	EventEndDay: Defines the day when the single event ends
+	EventStartTime: Defines the time when the single event starts 
+	EventEndTime: Defines the time when the single event ends
+	EventRecurrent: Defines if the event is recurrent (it must contain one of the value '''Yes''' or '''No''')
+	EventRecurrentStart: Defines the start of the recurrent event (consider it as the first day of the recurrent event)
+	EventRecurrentEnd: Defines the end of the recurrent event (consider it as the last day the recurrent event can take place)
+	EventRecurrentPeriod: Defines the interval between the start of a single event and the next occurrence (it is a numeric value greater than zero)
+	EventRecurrentUnit: Defines the interval unit between the start of a single event and the next occurrence (it must be one value between day, week, month, year)
+	
+	# a Form implementing [https://www.mediawiki.org/wiki/Extension:Semantic_Forms/Linking_to_forms#The_one-step_process|the one step process] mapped to the single event Template wich allows user to specify optional values if recurrent event.
+	(see example below)
+	
+	# a '''recinput''' button where the mandatory REC fields are mapped on the Event form .
+	(see example below)
+	
+{{Note|1=User should properly map semantic information within the Template in order to work with SMW.}}
+{{Note|1=User would want to define semantic properties to limit the input possible values.}}
+	
+It was implemented by [mailto:michele.fella@gmail.com Mik] in order to allow user to add single or multiple events using a simple form and query those events using SMW.
+
+Please check the example section for more details.
+
+== Installation ==
+{{ExtensionInstall
+|download-link=[https://github.com/fellam/RecurrentEventCalendar/archive/master.zip Download]
+}}
+
+==Example==
+
+===Wiki code===
+<pre>
+<RecurrentEventCalendar>
+type=create
+break=no
+width=70
+form=People
+search on namespace=People
+placeholder=Type the contact name to check if it already exists
+buttonlabel=Submit
+newwin=true
+bgcolor=aqua
+</RecurrentEventCalendar>
+</pre>
+|-
+|
+
+== General syntax ==
+RecurrentEventCalendar are constructed like this:
+{| border="0" cellspacing="5" cellpadding="5" frames="border" rules="all" bgcolor="#ffffff"
+|-
+|<pre><RecurrentEventCalendar>
+type=
+form=
+search on namespace=
+bgcolor=
+width=
+buttonlabel=
+break=
+placeholder=
+newwin=
+</RecurrentEventCalendar>
+</pre>
+|}
+
+The ''type'' parameter is mandatory and the only allowed value is ''create''. 
+
+The ''form'' parameter is mandatory and defines the form to be used for adding/editing the page. 
+
+The ''search on namespace'' parameter is mandatory and defines the namespace for autocomplete the page names. 
+
+== Parameters ==
+{| class="wikitable"
+!Parameter
+!Description
+!Scope
+!Compatibility
+!Example
+!Result
+|-
+||'''bgcolor='''
+|Sets the table background color (HTML color values). Do not use quotes.
+|All types
+|''?''
+|<pre><RecurrentEventCalendar>
+type=create
+form=formname
+search on namespace=namespacename
+bgcolor=#eeeeff
+</RecurrentEventCalendar></pre>
+|<RecurrentEventCalendar>
+type=create
+form=formname
+search on namespace=namespacename
+bgcolor=#eeeeff
+</RecurrentEventCalendar>
+|-
+||'''width='''
+|Sets the width of the input box in characters.
+|All types
+|''?''
+|<pre><RecurrentEventCalendar>
+type=create
+form=formname
+search on namespace=namespacename
+width=24
+</RecurrentEventCalendar></pre>
+|<RecurrentEventCalendar>
+type=create
+form=formname
+search on namespace=namespacename
+width=24
+</RecurrentEventCalendar>
+|-
+||'''buttonlabel='''
+|This label will be used for the main button of the form.
+|All types
+|''?''
+|<pre><RecurrentEventCalendar>
+type=create
+form=formname
+search on namespace=namespacename
+buttonlabel=Add new page
+</RecurrentEventCalendar></pre>
+|<RecurrentEventCalendar>
+type=create
+form=formname
+search on namespace=namespacename
+buttonlabel=Add new page
+</RecurrentEventCalendar>
+|-
+||'''break='''
+|Whether or not to insert a line break between the input box and the button(s). Defaults to '''yes''' (use a line break).
+|All types
+|''?''
+|<pre><RecurrentEventCalendar>
+type=create
+form=formname
+search on namespace=namespacename
+width=24
+break=no
+</RecurrentEventCalendar></pre>
+|<RecurrentEventCalendar>
+type=create
+form=formname
+search on namespace=namespacename
+width=24
+break=no
+</RecurrentEventCalendar>
+|-
+||'''search on namespaces='''
+|Support for namespace checkboxes in fulltext search.<br /> With "<tt>Namespace'''**'''</tt>" it is checked by default.
+|search, fulltext
+|''?''
+|<pre><RecurrentEventCalendar>
+type=create
+form=formname
+search on namespace=namespacename
+namespaces=Main**,Help
+</RecurrentEventCalendar></pre>
+|<RecurrentEventCalendar>
+type=create
+form=formname
+search on namespace=namespacename
+namespaces=Main**,Help
+</RecurrentEventCalendar>
+|-
+||'''placeholder='''
+|Define placeholder text that will display in the input box when it is empty.
+|All types
+|1.19+
+|<pre><RecurrentEventCalendar>
+type=create
+form=formname
+search on namespace=namespacename
+placeholder=some text here
+</RecurrentEventCalendar></pre>
+|<RecurrentEventCalendar>
+type=create
+form=formname
+search on namespace=namespacename
+placeholder=some text here
+</RecurrentEventCalendar>
+|-
+||'''newwin='''
+|Define whether or not the form should be opened in a new window. (use newwin=true).
+|All types
+|1.19+
+|<pre><RecurrentEventCalendar>
+type=create
+form=formname
+search on namespace=namespacename
+newwin=true
+</RecurrentEventCalendar></pre>
+|<RecurrentEventCalendar>
+type=create
+form=formname
+search on namespace=namespacename
+newwin=true
+</RecurrentEventCalendar>
+|}
+
+==See also==
+
+* [[Extension:Create Page]]
+* [[Extension:CreateArticle]]
+* [[Extension:CreateBox]]
+* [[Extension:InputBox]]
+
+[[Category:Form extensions]]
+[[Category:Page creation extensions]]
+[[Category:Search widget extensions]]
+[[Category:Edit box extensions]]

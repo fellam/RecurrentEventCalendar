@@ -1,0 +1,9 @@
+This is a property of type [[Has type::Text]].
+
+The allowed value for this property is:
+* [[Allows value::Holiday]]
+* [[Allows value::Health]]
+* [[Allows value::Time in lieu]]
+* [[Allows value::Paid leave]]
+* [[Allows value::Solidarieta]]
+* [[Allows value::Business trip]]

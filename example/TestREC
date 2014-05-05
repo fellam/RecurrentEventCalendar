@@ -1,0 +1,16 @@
+{{#reclink:
+form=Event
+|link text=Create event series
+|link type=button
+|iterator=date
+|startday=Event[EventStartDay]
+|endday=Event[EventEndDay]
+|starttime=Event[EventStartTime]
+|endtime=Event[EventEndTime]
+|isrecurrent=Event[EventRecurrent]
+|recurrentstart=Event[EventRecurrentStart]
+|recurrentend=Event[EventRecurrentEnd]
+|recurrentunit=Event[EventRecurrentUnit]
+|recurrentperiod=Event[EventRecurrentPeriod]
+|new window
+}}

@@ -1,0 +1,13 @@
+This is a property of type [[Has type::Text]].
+
+The allowed value for this property is:
+* [[Allows value::IP]]
+* [[Allows value::UNIX]]
+* [[Allows value::WIN]]
+* [[Allows value::NTW]]
+* [[Allows value::DB]]
+* [[Allows value::Configuration]]
+* [[Allows value::Data Cleaning]]
+* [[Allows value::Manual procedure]]
+* [[Allows value::Platforms matching]]
+* [[Allows value::Recurrent activity]]

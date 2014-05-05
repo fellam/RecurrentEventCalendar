@@ -1,0 +1,16 @@
+<noinclude>
+Use this template to the unique and add namespace for a given input list optionally separated by a character.
+
+It should be called in the following format:
+<pre>
+{{AddNamespace|InputList|Delimiter|Namespace|PropertyName}}
+</pre>
+
+Example:
+<pre>
+{{AddNamespace|Pippo, Pluto, Donald, Pluto|,|Test|People}}
+</pre>
+{{AddNamespace|Pippo, Pluto, Donald, Pluto|,|Test|People}}
+</noinclude><includeonly>
+{{Unique|{{#arraymap:{{Unique|{{{1|}}}|{{{2|}}}}}|,|x|[[{{{3|}}}:x|x]]{{#set:|{{{4|}}}={{{3|}}}:x}}|,}}|,}}
+</includeonly>
