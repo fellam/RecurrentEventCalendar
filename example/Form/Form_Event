@@ -3,6 +3,7 @@ This is the "Event" form.
 
 To create a page with this form click the button below.
 
+<<<<<<< HEAD
 {{#formlink:form=Event|link text=Add a new event|link type=button|new window}}
 
 ==See also ==
@@ -31,6 +32,36 @@ Incident=>IncidentType;
 {{TableTR}}
 {{TableHeader|100px|middle|middle|center|Type}} 
 {{TableCell||middle|middle|left| {{{field|EventType|input type=dropdown|property=Attendance types|mandatory|show on select=Business trip=>Location;}}} }}
+=======
+{{#formlink:form=Event|link text=Add a new event|link type=button|query string=namespace=Events|new window}}
+
+==See also ==
+[[Template:Event]]
+[[Category:Events]]
+</noinclude>
+<includeonly>
+<div style="text-align: right; margin-top:-45px; margin-bottom:15px;"> 
+{{{standard input|cancel}}} {{!}} {{{standard input|save|label=Save}}}
+{{{info|page name=<Event[EventCategory]>:<Event[EventStartDay]>:<Event[EventTitle]>|create title=Add new event}}}
+</div>
+----
+{{{for template|Event}}}
+{| class="wikitable" style="width:100%;"
+{{TableHeader|100px|middle|middle|center|Category}} 
+{{TableCell||middle|middle|left| {{{field|EventCategory|input type=dropdown|show on select=
+Attendance=>AttendanceType;
+Meeting=>Location;
+Change management=>ChangeType;
+Maintenance=>MaintenanceType;
+Incident=>IncidentType;
+|property=Has event category|mandatory}}} }}
+|}
+<div id="AttendanceType" align="center">
+{| class="wikitable" style="width:100%;"
+{{TableTR}}
+{{TableHeader|100px|middle|middle|center|Type}} 
+{{TableCell||middle|middle|left| {{{field|EventType|input type=dropdown|mandatory|property=Attendance types|show on select=Business trip=>Location;}}} }}
+>>>>>>> refs/remotes/origin/master
 |}
 </div>
 <div id="ChangeType" align="center">
