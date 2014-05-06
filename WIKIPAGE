@@ -25,9 +25,9 @@
 |bugzilla      = RecurrentEventCalendar
 }}
 
-The '''RecurrentEventCalendar''' extension allows user to generate single or recurrent multiple event calendar pages with one form.
+The '''RecurrentEventCalendar''' extension allows user to generate single or recurrent multiple event calendar pages with one form and query those events using SMW..
 
-It was implemented by [mailto:michele.fella@gmail.com Mik] in order to allow user to add single or multiple events using a simple form and query those events using SMW.
+It was implemented by [[User:Michele.Fella|Mik]]. 
 
 == Installation ==
 {{ExtensionInstall
@@ -175,6 +175,24 @@ form=Event
 |Sets whether or not the form shuold be opened in a new window.
 |
 |}
+
+=== Configuration parameters ===
+The following settings may be used:
+
+* $recgPageGenerationLimits to specify the maximum number of pages that may be
+  generated per request by a member of a user group. If a user is in more than
+  one group, the highest number is used.
+
+  Default setting:
+
+    $recgPageGenerationLimits = array(
+      '*' => 0,
+      'user' => 10,
+      'sysop' => REC_NOLIMIT
+    );
+
+If you want to use these settings, just include them in LocalSettings.php AFTER
+the require_once("$IP/extensions/RecurrentEventCalendar/RecurrentEventCalendar.php");
 
 ==See also==
 
