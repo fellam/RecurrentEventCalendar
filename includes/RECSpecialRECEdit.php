@@ -150,7 +150,7 @@ class RECSpecialRECEdit extends SpecialPage {
 				$props=array();
 				foreach ($rec->props as $value ){
 					if(!array_key_exists($value,$autofields)){
-						throw new RECException( RECUtils::buildMessage( 'recerror-errautofillprop',$value));
+						throw new RECException( RECUtils::buildMessage( 'recerror-noautofillprop',$value));
 					}else{
 						$props[] = $autofields[$value];
 					}
@@ -163,7 +163,7 @@ class RECSpecialRECEdit extends SpecialPage {
 						$match[] = $value;
 					}else{
 						if(!array_key_exists($value,$autofields)){
-							throw new RECException( RECUtils::buildMessage( 'recerror-errautofillmatch',$value));
+							throw new RECException( RECUtils::buildMessage( 'recerror-noautofillmatch',$value));
 						}else{
 							$match[] = $autofields[$value];
 						}
@@ -177,7 +177,7 @@ class RECSpecialRECEdit extends SpecialPage {
 						$values[] = $value;
 					}else{
 						if(!array_key_exists($value,$autofields)){
-							throw new RECException( RECUtils::buildMessage( 'recerror-errautofillvalues',$value));
+							throw new RECException( RECUtils::buildMessage( 'recerror-noautofillvalues',$value));
 						}else{
 							$values[] = $autofields[$value];
 						}
@@ -323,9 +323,6 @@ class RECSpecialRECEdit extends SpecialPage {
 		$autofields = explode(';',$request->getVal('autofield'));
 // 		print "autofield=<div>"; print_r($autofields); print "</div></br>";
 		if ( is_null( $autofills ) && !is_null($autofields) ) {
-			if ( is_null( $autofills )) {
-				throw new RECException( RECUtils::buildMessage( 'recerror-noautofill' ) );
-			}
 			if ( is_null( $autofields )) {
 				throw new RECException( RECUtils::buildMessage( 'recerror-noautofield' ) );
 			}
@@ -337,8 +334,8 @@ class RECSpecialRECEdit extends SpecialPage {
 				$fields=explode(':',$autofield);
 				$prop=$fields[0];
 				$field=$fields[1];
-				if(is_null($prop)||is_nan($prop)||$prop==''){throw new RECException( RECUtils::buildMessage( 'recerror-errautofieldval',$prop ) );}
-				if(is_null($field)||is_nan($field)||$field==''){throw new RECException( RECUtils::buildMessage( 'recerror-errautofieldval',$field ) );}
+				if(is_null($prop)||is_nan($prop)||$prop==''){throw new RECException( RECUtils::buildMessage( 'recerror-noutofieldprop',$prop ) );}
+				if(is_null($field)||is_nan($field)||$field==''){throw new RECException( RECUtils::buildMessage( 'recerror-noautofieldval',$field ) );}
 // 				print "prop - field = ".$prop." - ".$field."</br>";
 				$res_autofields[$prop] = $field;
 			}
@@ -358,20 +355,20 @@ class RECSpecialRECEdit extends SpecialPage {
 // 				print "props - ".$props."</br>";
 // 				print "match - ".$match."</br>";
 // 				print "titles - ".$titles."</br>";
-				if(is_null($target)||is_nan($target)||$target==''){throw new RECException( RECUtils::buildMessage( 'recerror-errautofieldtarget',$target ) );}
-				if(is_null($props)){throw new RECException( RECUtils::buildMessage( 'recerror-errautofieldprops',$props ) );}
-				if(is_null($match)||is_nan($match)||$match==''){throw new RECException( RECUtils::buildMessage( 'recerror-errautofieldmatch',$match ) );}
-				if(is_null($values)||is_nan($values)||$values==''){throw new RECException( RECUtils::buildMessage( 'recerror-errautofieldvalue',$values ) );}
+				if(is_null($target)||is_nan($target)||$target==''){throw new RECException( RECUtils::buildMessage( 'recerror-noautofieldtarget',$target ) );}
+				if(is_null($props)){throw new RECException( RECUtils::buildMessage( 'recerror-noautofieldprops',$props ) );}
+				if(is_null($match)||is_nan($match)||$match==''){throw new RECException( RECUtils::buildMessage( 'recerror-noautofieldmatch',$match ) );}
+				if(is_null($values)||is_nan($values)||$values==''){throw new RECException( RECUtils::buildMessage( 'recerror-noautofieldvalue',$values ) );}
 				
 				if(!array_key_exists($target,$res_autofields)){
-					throw new RECException( RECUtils::buildMessage( 'recerror-errautofilltarget',$target));
+					throw new RECException( RECUtils::buildMessage( 'recerror-noautofilltarget',$target));
 				}else{
 					$target = $res_autofields[$target];
 				}
 				$props=explode('.',$props);
 				foreach ($props as $pkey => $prop){
 					if(!array_key_exists($prop,$res_autofields)){
-						throw new RECException( RECUtils::buildMessage( 'recerror-errautofillprop',$prop));
+						throw new RECException( RECUtils::buildMessage( 'recerror-noautofillprop',$prop));
 // 					}else{
 // 						$props[$pkey] = $res_autofields[$prop];
 					}
@@ -382,7 +379,7 @@ class RECSpecialRECEdit extends SpecialPage {
 // 						$match[$mkey] = $m;
 // 					}else{
 						if(!array_key_exists($m,$res_autofields)){
-							throw new RECException( RECUtils::buildMessage( 'recerror-errautofillmatch',$m));
+							throw new RECException( RECUtils::buildMessage( 'recerror-noautofillmatch',$m));
 // 						}else{
 // 							$match[$mkey] = $res_autofields[$m];
 						}
@@ -394,7 +391,7 @@ class RECSpecialRECEdit extends SpecialPage {
 // 						$values[$vkey] = $value;
 // 					}else{
 						if(!array_key_exists($value,$res_autofields)){
-							throw new RECException( RECUtils::buildMessage( 'recerror-errautofillvalue',$values));
+							throw new RECException( RECUtils::buildMessage( 'recerror-noautofillvalue',$values));
 // 						}else{
 // 							$values[$vkey] = $res_autofields[$value];
 						}
