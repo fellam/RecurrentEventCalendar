@@ -34,7 +34,7 @@ class RECPageCreationJob extends Job {
 		$wgUser = User::newFromId( $this->params['user'] );
 
 		unset( $this->params['user'] );
-
+		
 		$this->params['form'] = $this->title->getText();
 		$this->params['target'] = '';
 

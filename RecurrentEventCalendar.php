@@ -83,5 +83,7 @@ $recgPageGenerationLimits = array(
 	'sysop' => REC_NOLIMIT
 );
 
+$recgDateFormat = "d/m/Y";
+
 
 $wgJobClasses['recCreatePage'] = 'RECPageCreationJob';

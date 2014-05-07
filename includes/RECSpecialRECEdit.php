@@ -90,6 +90,8 @@ class RECSpecialRECEdit extends SpecialPage {
 		$pageIsSource = ( $pageContents != null );
 		// get the iterator parameters
 		$iteratorData = $this->buildIteratorParameters( $request );
+		$autoFill = $this->buildAutoFill( $request );
+		
 		// Call SFFormPrinter::formHTML
 		list ( $formText, $javascriptText, $dataText, $formPageTitle, $generatedPageName ) =
 			$sfgFormPrinter->formHTML( $formDefinition, $formSubmitted, $pageIsSource, $formArticle->getID(), $pageContents );
@@ -106,6 +108,7 @@ class RECSpecialRECEdit extends SpecialPage {
 			. $preFormHtml
 			. "\n"
 			. Html::hidden( 'iteratordata', $iteratorData )
+			. Html::hidden( 'autofill', $autoFill )
 			. Html::hidden( 'formName', $formName )
 			. $formText;
 		SFUtils::addJavascriptAndCSS();
@@ -118,6 +121,7 @@ class RECSpecialRECEdit extends SpecialPage {
 
 	private function evaluateForm( WebRequest &$request ) {
 		global $wgUser, $recgIterators;
+		$userDateFormat = $this->getDateFormat();
 		$requestValues = $_POST;
 		if ( array_key_exists( 'iteratordata', $requestValues ) ) {
 			$iteratorData = FormatJson::decode( $requestValues['iteratordata'], true );
@@ -127,6 +131,68 @@ class RECSpecialRECEdit extends SpecialPage {
 		}
 		if ( array_key_exists( 'keep_parameters', $requestValues ) ) {
 			$keepParameters = FormatJson::decode( $requestValues['keep_parameters'], false );
+		}
+		$hasautofill=false;
+		if ( array_key_exists( 'autofill', $requestValues ) ) {
+			$hasautofill=true;
+			$req_autofill = FormatJson::decode( $requestValues['autofill'], false );
+			$autofields = array();
+			$autofields = (array) $req_autofill->fields;
+			foreach ( $autofields as $key => $value ) {
+				if($key!='target'){
+					$autofields[$key] = $this->getAndRemoveFromArray( $requestValues, $value, $keepParameters );
+				}
+// 				print "autofields[$key]=".$autofields[$key]."</br>";
+			}
+			$autofills = array();
+			foreach ( $req_autofill->fill as $rec ) {
+				$target=$rec->target;
+				$props=array();
+				foreach ($rec->props as $value ){
+					if(!array_key_exists($value,$autofields)){
+						throw new RECException( RECUtils::buildMessage( 'recerror-errautofillprop',$value));
+					}else{
+						$props[] = $autofields[$value];
+					}
+				}
+				$match=array();
+				foreach ($rec->match as $value ){
+					if(preg_match('/^(["\']).*\1$/m', $value) > 0){
+						$value = rtrim($value,'"');
+						$value = ltrim($value,'"');
+						$match[] = $value;
+					}else{
+						if(!array_key_exists($value,$autofields)){
+							throw new RECException( RECUtils::buildMessage( 'recerror-errautofillmatch',$value));
+						}else{
+							$match[] = $autofields[$value];
+						}
+					}
+				}
+				$values=array();
+				foreach ($rec->values as $value ){
+					if(preg_match('/^(["\']).*\1$/m', $value) > 0){
+						$value = rtrim($value,'"');
+						$value = ltrim($value,'"');
+						$values[] = $value;
+					}else{
+						if(!array_key_exists($value,$autofields)){
+							throw new RECException( RECUtils::buildMessage( 'recerror-errautofillvalues',$value));
+						}else{
+							$values[] = $autofields[$value];
+						}
+					}
+				}
+				$autofills[] = array(
+						'target' => $target, 
+						'props' => implode(".", $props),
+						'match' => implode(".", $match),
+						'values' => implode("", $values)
+						);
+			}
+// 			print "autofields=<div>"; print_r($autofields); print "</div></br>";
+// 			print "autofills=<div>"; print_r($autofills); print "</div></br>";
+// 			exit;
 		}
 		$targetFormName = $request->getText( 'formName' );
 		$iteratorName = null;
@@ -159,14 +225,14 @@ class RECSpecialRECEdit extends SpecialPage {
 		$iteratorParams = $iterator->checkValues( $iteratorParams );
 		SFAutoeditAPI::addToArray( $requestValues, $iteratorData['isrecurrent'], $iteratorParams['isrecurrent'], true );
 		if ( $iteratorParams['isrecurrent'] === 'No' ) {
-			$iteratorStartValues = $iterator->getValues( $iteratorParams['startday'], $iteratorParams['endday'], $iteratorParams['recurrentunit'], $iteratorParams['recurrentperiod'] );
-			$iteratorEndValues = $iterator->getValues( $iteratorParams['endday'], $iteratorParams['endday'], $iteratorParams['recurrentunit'], $iteratorParams['recurrentperiod'] );
+			$iteratorStartValues = $iterator->getValues( $iteratorParams['startday'], $iteratorParams['endday'], $iteratorParams['recurrentunit'], $iteratorParams['recurrentperiod'], $userDateFormat);
+			$iteratorEndValues = $iterator->getValues( $iteratorParams['endday'], $iteratorParams['endday'], $iteratorParams['recurrentunit'], $iteratorParams['recurrentperiod'], $userDateFormat);
 			$iteratorParams['startday'] = $iteratorStartValues[0];
 			$iteratorParams['endday'] = $iteratorEndValues[0];
 			$iteratorValuesCount = 1;
 		} else if ( $iteratorParams['isrecurrent'] === 'Yes' ) {
-			$iteratorStartValues = $iterator->getValues( $iteratorParams['startday'], $iteratorParams['recurrentend'], $iteratorParams['recurrentunit'], $iteratorParams['recurrentperiod'] );
-			$iteratorEndValues = $iterator->getValues( $iteratorParams['endday'], $iteratorParams['recurrentend'], $iteratorParams['recurrentunit'], $iteratorParams['recurrentperiod'] );
+			$iteratorStartValues = $iterator->getValues( $iteratorParams['startday'], $iteratorParams['recurrentend'], $iteratorParams['recurrentunit'], $iteratorParams['recurrentperiod'], $userDateFormat);
+			$iteratorEndValues = $iterator->getValues( $iteratorParams['endday'], $iteratorParams['recurrentend'], $iteratorParams['recurrentunit'], $iteratorParams['recurrentperiod'], $userDateFormat);
 			$iteratorValuesCount = count( $iteratorEndValues );
 			$userlimit = $this->getPageGenerationLimit();
 			// check userlimit
@@ -185,6 +251,15 @@ class RECSpecialRECEdit extends SpecialPage {
 		SFAutoeditAPI::addToArray( $requestValues, $iteratorData['recurrentend'], $iteratorParams['recurrentend'], true );
 		SFAutoeditAPI::addToArray( $requestValues, $iteratorData['recurrentunit'], $iteratorParams['recurrentunit'], true );
 		SFAutoeditAPI::addToArray( $requestValues, $iteratorData['recurrentperiod'], $iteratorParams['recurrentperiod'], true );
+		if($hasautofill){
+			foreach($autofills as $af){
+				if($af['props']===$af['match']){
+					SFAutoeditAPI::addToArray( $requestValues,$af['target'], $af['values'], true );
+				}
+			} 
+		}
+// 		print "requestValues=<div>"; print_r($requestValues); print "</div></br>";
+// 		exit;
 		if ( $iteratorParams['isrecurrent'] === 'Yes' ) {
 			foreach ( $iteratorEndValues as $key => $value ) {
 				SFAutoeditAPI::addToArray( $requestValues, $iteratorData['startday'], $iteratorStartValues[$key], true );
@@ -230,6 +305,118 @@ class RECSpecialRECEdit extends SpecialPage {
 				)
 			):'')
 		);
+	}
+	
+	/**
+	 * Builds a JSON blob of the data required to use the iterator.
+	 * @param WebRequest $request
+	 * @return type
+	 */
+	private function buildAutoFill( WebRequest &$request ) {
+		
+// 		print "request=<div>"; print_r($request); print "</div></br>";
+		
+		// autofill
+		$autofills = explode(';',$request->getVal('autofill'));
+// 		print "autofill=<div>"; print_r($autofills); print "</div></br>";
+		// autofield
+		$autofields = explode(';',$request->getVal('autofield'));
+// 		print "autofield=<div>"; print_r($autofields); print "</div></br>";
+		if ( is_null( $autofills ) && !is_null($autofields) ) {
+			if ( is_null( $autofills )) {
+				throw new RECException( RECUtils::buildMessage( 'recerror-noautofill' ) );
+			}
+			if ( is_null( $autofields )) {
+				throw new RECException( RECUtils::buildMessage( 'recerror-noautofield' ) );
+			}
+		}
+		//building autofield
+		$res_autofields = array();
+		foreach ($autofields as $autofield){
+			if(!is_null($autofield)&&!is_nan($autofield)&&$autofield!=''){
+				$fields=explode(':',$autofield);
+				$prop=$fields[0];
+				$field=$fields[1];
+				if(is_null($prop)||is_nan($prop)||$prop==''){throw new RECException( RECUtils::buildMessage( 'recerror-errautofieldval',$prop ) );}
+				if(is_null($field)||is_nan($field)||$field==''){throw new RECException( RECUtils::buildMessage( 'recerror-errautofieldval',$field ) );}
+// 				print "prop - field = ".$prop." - ".$field."</br>";
+				$res_autofields[$prop] = $field;
+			}
+		}
+// 		print "res_autofields=";print_r($res_autofields);print"</br>";
+		//building autofill
+		$res_autofill = array();
+		foreach ($autofills as $key => $autofill){
+			if(!is_null($autofill)&&!is_nan($autofill)&&$autofill!=''){
+// 				print "autofill - ";print_r($autofill);print "</br>";
+				$fields=explode(':',$autofill);
+				$target=$fields[0];
+				$props=$fields[1];
+				$match=$fields[2];
+				$values=$fields[3];
+// 				print "target - ".$target."</br>";
+// 				print "props - ".$props."</br>";
+// 				print "match - ".$match."</br>";
+// 				print "titles - ".$titles."</br>";
+				if(is_null($target)||is_nan($target)||$target==''){throw new RECException( RECUtils::buildMessage( 'recerror-errautofieldtarget',$target ) );}
+				if(is_null($props)){throw new RECException( RECUtils::buildMessage( 'recerror-errautofieldprops',$props ) );}
+				if(is_null($match)||is_nan($match)||$match==''){throw new RECException( RECUtils::buildMessage( 'recerror-errautofieldmatch',$match ) );}
+				if(is_null($values)||is_nan($values)||$values==''){throw new RECException( RECUtils::buildMessage( 'recerror-errautofieldvalue',$values ) );}
+				
+				if(!array_key_exists($target,$res_autofields)){
+					throw new RECException( RECUtils::buildMessage( 'recerror-errautofilltarget',$target));
+				}else{
+					$target = $res_autofields[$target];
+				}
+				$props=explode('.',$props);
+				foreach ($props as $pkey => $prop){
+					if(!array_key_exists($prop,$res_autofields)){
+						throw new RECException( RECUtils::buildMessage( 'recerror-errautofillprop',$prop));
+// 					}else{
+// 						$props[$pkey] = $res_autofields[$prop];
+					}
+				}
+				$match=explode('.',$match);
+				foreach ($match as $mkey => $m){
+					if(preg_match('/^(["\']).*\1$/m', $m) < 1){
+// 						$match[$mkey] = $m;
+// 					}else{
+						if(!array_key_exists($m,$res_autofields)){
+							throw new RECException( RECUtils::buildMessage( 'recerror-errautofillmatch',$m));
+// 						}else{
+// 							$match[$mkey] = $res_autofields[$m];
+						}
+					}
+				}
+				$values=explode('.',$values);
+				foreach ($values as $vkey => $value){
+					if(preg_match('/^(["\']).*\1$/m', $value) < 1){
+// 						$values[$vkey] = $value;
+// 					}else{
+						if(!array_key_exists($value,$res_autofields)){
+							throw new RECException( RECUtils::buildMessage( 'recerror-errautofillvalue',$values));
+// 						}else{
+// 							$values[$vkey] = $res_autofields[$value];
+						}
+					}
+				}
+				$res_autofill[] = array(
+					'target' => $target,
+					'props' => $props,
+					'match' => $match,
+					'values' => $values
+				);
+			}
+		}
+		$response = array(
+				'fields' => $res_autofields,
+				'fill' => $res_autofill
+		);
+		
+// 		print "res_autofields<div>";print_r($res_autofields);print"</div></br>";
+// 		print "res_autofill<div>";print_r($res_autofill);print"</div></br>";
+// 		exit;
+		return FormatJson::encode( $response );
 	}
 
 	/**
@@ -383,6 +570,16 @@ class RECSpecialRECEdit extends SpecialPage {
 			}
 		}
 		return $limit;
+	}
+	
+	//returns user defined string for the Date format.
+	public function getDateFormat() {
+		global $wgUser, $recgDateFormat;
+		$format = "d/m/Y";
+		if (!is_null($recgDateFormat)&&$recgDateFormat!=''){
+			$format = $recgDateFormat;
+		}
+		return $format;
 	}
 
 }

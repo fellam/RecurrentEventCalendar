@@ -170,7 +170,7 @@ class RECDateIterator extends RECIterator {
 	/**
 	 * @return an array of the values to be used in the target field of the target form
 	 */
-	function getValues ( $start, $end, $unit, $period ){
+	function getValues ( $start, $end, $unit, $period, $userDateFormat ){
 		// TODO: SMWSetRecurringEvent does not exist from SMW 1.9 onwards
 		// remove when compatibility to SMW pre1.9 is dropped
 		if ( class_exists( 'SMWSetRecurringEvent' ) ) {
@@ -207,7 +207,6 @@ class RECDateIterator extends RECIterator {
 			);
 
 			$events = new SMW\RecurringEvents( $params, $settings );
-// 			print "events=<div>"; print_r($events); print "</div></br>";
 			
 			$values = $events->getDates();
 			
@@ -223,8 +222,19 @@ class RECDateIterator extends RECIterator {
 				$values[$key] = trim( preg_replace( '/..:..:../', '', $value ) );
 			}
 		}
-
-		return $values;
+		$formattedvalues = array();
+		//return values ad format
+// 		print "userDateFormat=".$userDateFormat."</br>";
+// 		print "values=".$values."</br>";
+		foreach ($values as &$value) {
+// 			print "	VAL=".$value."</br>";
+			$date = new DateTime($value);
+// 			print "	DATE=".$value."</br>";
+			$formattedvalues[] = $date->format($userDateFormat);
+		}
+// 		print "formattedvalues=<div>"; print_r($formattedvalues); print "</div></br>";
+// 		print "values=<div>"; print_r($values); print "</div></br>";
+		return $formattedvalues;
 	}
 	
 }

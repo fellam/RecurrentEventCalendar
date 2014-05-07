@@ -34,6 +34,6 @@ abstract class RECIterator {
 	/**
 	 * @return an array of the values to be used in the target field of the target form
 	 */
-	abstract function getValues ( $start, $end, $unit, $period );
+	abstract function getValues ( $start, $end, $unit, $period, $userDateFormat );
 	
 }
