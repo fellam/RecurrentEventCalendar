@@ -1,0 +1,16 @@
+<noinclude>
+This is "GetEventPageTitleDate" template returns the re formatted date for EventDate Page.
+
+It should be called in the following format:
+
+<pre>
+{{GetEventPageTitleDate|DateValue}}
+</pre>
+
+Where DateValue is Date value in the format dd/mm/yyyy.
+
+Edit the page to see the template text.
+==Example==
+<nowiki>{{</nowiki>GetEventPageTitleDate|04/05/2014}} = {{GetEventPageTitleDate|04/05/2014}}
+<nowiki>{{</nowiki>GetEventPageTitleDate|24/08/2014}} = {{GetEventPageTitleDate|24/08/2014}}
+</noinclude><includeonly>{{#explode:{{{1}}}|/|2}}{{#explode:{{{1}}}|/|1}}{{#explode:{{{1}}}|/|0}}</includeonly>
