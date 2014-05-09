@@ -40,7 +40,7 @@ class RECDateIterator extends RECIterator {
 	 */
 	
 	function checkValues ( &$data ){
-// 		print "data=<div>"; print_r($data); print "</div></br>";
+		print "data=<div>"; print_r($data); print "</div></br>";
 		if ( array_key_exists( 'startday', $data ) ) {
 			$startday = $data['startday'];
 			if ( is_string( $startday ) ) {

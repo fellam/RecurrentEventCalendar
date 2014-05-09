@@ -12,7 +12,7 @@ To create a page with this form click the button below.
 <includeonly>
 <div style="text-align: right; margin-top:-45px; margin-bottom:15px;"> 
 {{{standard input|cancel}}} {{!}} {{{standard input|save|label=Save}}}
-{{{info||page name=Events:<Event[EventCategory]>/DATE:<Event[EventStartDay]>_ID:<unique number;random><Event[EventType]>_TITLE:<Event[EventTitle]>|create title=Add new event}}}
+{{{info|page name=Events:<Event[EventCategory]>/ID:<Event[EventType]><unique number;random>|create title=Add new event}}}
 </div>
 ----
 {{{for template|Event}}}
@@ -23,19 +23,25 @@ Attendance=>AttendanceType;
 Meeting=>LocationOptional;
 Meeting=>Title;
 Meeting=>MultiContact;
+Meeting=>DescriptionMandatory;
 Change management=>ChangeType;
 Change management=>Title;
 Change management=>MultiContact;
+Change management=>DescriptionMandatory;
 Maintenance=>MaintenanceType;
 Maintenance=>Title;
 Maintenance=>MultiContact;
+Maintenance=>DescriptionMandatory;
 Incident=>IncidentType;
 Incident=>Title;
 Incident=>MultiContact;
+Incident=>DescriptionMandatory;
 Task=>Title;
 Task=>MultiContact;
+Task=>DescriptionMandatory;
 Others=>Title;
 Others=>MultiContact;
+Others=>DescriptionOptional;
 |property=Has event category|mandatory}}} }}
 |}
 <div id="AttendanceType" align="center">
@@ -45,11 +51,17 @@ Others=>MultiContact;
 {{TableCell||middle|middle|left| {{{field|EventType|input type=dropdown|property=Attendance types|mandatory|show on select=
 Business trip=>LocationMandatory;
 Business trip=>MultiContact;
+Business trip=>DescriptionOptional;
 Holiday=>SingleContact;
+Holiday=>DescriptionOptional;
 Health=>OnlyContact;
+Health=>DescriptionOptional;
 Time in lieu=>OnlyContact;
+Time in lieu=>DescriptionMandatory;
 Paid leave=>OnlyContact;
+Paid leave=>DescriptionMandatory;
 Solidarieta=>OnlyContact;
+Solidarieta=>DescriptionOptional;
 }}} }}
 |}
 </div>
@@ -107,6 +119,7 @@ Solidarieta=>OnlyContact;
 {{TableHeader|100px|middle|middle|center|Location}} 
 {{TableCell||middle|middle|left| {{{field|EventLocation|rows=1|input type=textarea with autocomplete|autogrow|values from property=Has event location|property=Has event location|list|mandatory}}} }}
 |}
+</div>
 <div id="LocationOptional" align="left">
 {| class="wikitable" style="width:100%;"
 {{TableHeader|100px|middle|middle|center|Location}} 
@@ -148,10 +161,18 @@ Solidarieta=>OnlyContact;
 |}
 </div>
 ----
+<div id="DescriptionMandatory" align="center">
 {| class="wikitable" style="width:100%;"
 {{TableHeader|100px|middle|middle|center|Description}} 
 {{TableCell||middle|middle|left| {{{field|EventDescription|rows=1|mandatory|input type=input type=textarea with autocomplete|autogrow|values from property=Has event description|property=Has event description}}} }}
 |}
+</div>
+<div id="DescriptionOptional" align="center">
+{| class="wikitable" style="width:100%;"
+{{TableHeader|100px|middle|middle|center|Description}} 
+{{TableCell||middle|middle|left| {{{field|EventDescription|rows=1|input type=input type=textarea with autocomplete|autogrow|values from property=Has event description|property=Has event description}}} }}
+|}
+</div>
 {{{end template}}} 
 __NOFACTBOX__ 
 </includeonly>

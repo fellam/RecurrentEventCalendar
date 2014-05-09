@@ -37,7 +37,7 @@ $wgExtensionCredits['semantic'][] = array(
 	'name' => 'Recurrent Event Calendar',
 	'author' => '[http://www.mediawiki.org/wiki/User:Michele.Fella Michele Fella]',
 	'url' => 'https://www.mediawiki.org/wiki/Extension:RecurrentEventCalendar',
-	'descriptionmsg' => 'recurrenteventcalendar-desc',
+	'descriptionmsg' => 'RecurrentEventCalendar-desc',
 	'version' => REC_VERSION,
 );
 

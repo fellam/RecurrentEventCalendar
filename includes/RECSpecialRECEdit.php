@@ -123,6 +123,7 @@ class RECSpecialRECEdit extends SpecialPage {
 		global $wgUser, $recgIterators;
 		$userDateFormat = $this->getDateFormat();
 		$requestValues = $_POST;
+		print "requestValues=<div>"; print_r($requestValues); print "</div></br>";
 		if ( array_key_exists( 'iteratordata', $requestValues ) ) {
 			$iteratorData = FormatJson::decode( $requestValues['iteratordata'], true );
 			unset( $requestValues['iteratordata'] );
@@ -140,7 +141,7 @@ class RECSpecialRECEdit extends SpecialPage {
 			$autofields = (array) $req_autofill->fields;
 			foreach ( $autofields as $key => $value ) {
 				if($key!='target'){
-					$autofields[$key] = $this->getAndRemoveFromArray( $requestValues, $value, $keepParameters );
+					$autofields[$key] = $this->getAndRemoveFromArray( $requestValues, $value, true );
 				}
 // 				print "autofields[$key]=".$autofields[$key]."</br>";
 			}

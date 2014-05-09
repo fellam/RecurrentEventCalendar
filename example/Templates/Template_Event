@@ -98,9 +98,11 @@ Edit the page to see the template text.
 {{TableCell||middle|middle|center|{{#ifeq: {{{EventRecurrent|}}}|Yes|{{RecurrentToString|{{{EventRecurrentStart}}}|{{{EventRecurrentEnd}}}|{{{EventRecurrentPeriod|}}}|{{{EventRecurrentUnit|}}}}}|{{{EventRecurrent|}}}}}}}
 |}
 {| class="wikitable" style="width:100%;"
+{{#if: {{{EventTitle|}}}
 {{TableHeader|100px|middle|middle|center|Title}}
 {{TableCell||middle|middle|left|[[Has event title::{{{EventTitle|}}}]]}}
 {{TableTR}}
+}}
 {{TableHeader|100px|middle|middle|center|When}} 
 {{TableCell||middle|middle|left|{{#ifeq: {{{EventStartDay|}}}|{{{EventEndDay|}}}| on [[Has event start::Has event end::{{{EventStartDay|}}}]] between [[Has event start time::{{{EventStartTime|}}}]] and [[Has event end time::{{{EventEndTime|}}}]] | from [[Has event start::{{{EventStartDay|}}}]] [[Has event start time::{{{EventStartTime|}}}]] until [[Has event end::{{{EventEndDay|}}}]] [[Has event end time::{{{EventEndTime|}}}]]}}}}
 {{#if: {{{EventLocation|}}}
@@ -154,6 +156,6 @@ Edit the page to see the template text.
 |Has event icon={{GetEventIcon|{{{EventCategory|}}}|{{{EventType|}}}}}
 |Has event color=#{{GetEventColor|{{{EventCategory|}}}|{{{EventType|}}}}}
 }}
-[[Category:Events]][[Category:{{{EventCategory}}}]]{{#if: {{{EventType|}}}|[[Category:{{{EventType}}}]]}}
+[[Category:Events]]{{#if: {{{EventCategory|}}}|[[Category:{{{EventCategory}}}]]}}{{#if: {{{EventType|}}}|[[Category:{{{EventType}}}]]}}
 __NOFACTBOX__ 
 </includeonly>

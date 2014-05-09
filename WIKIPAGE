@@ -54,6 +54,8 @@ form=Event
 |recurrentunit=Event[EventRecurrentUnit]
 |recurrentperiod=Event[EventRecurrentPeriod]
 |new window
+|autofield=
+|autofill=
 }}
 </pre>
 
@@ -174,6 +176,21 @@ form=Event
 |No
 |Sets whether or not the form shuold be opened in a new window.
 |
+|-
+||'''autofield='''
+|No
+|Sets fields to be used for autofill.
+|Example of declaration is as param1:Form[FormField];param2:Form[FormField];.. 
+|-
+||'''autofill='''
+|No
+|Allows to overrive any of the form field after submission based on value matching rules.
+There are four part in each rule separated by ":" and are target:formvalue:match:newvalue.
+If formvalue is equal to the string defined in match the target field of the form will be overridden with the newvalue.
+Multiple rules shold be separated by ";".
+Within a rule use dot character for separate params and string.
+The syntax should be autofill=target:paramX.paramY:"ValueToMatchForParamX"."ValueToMatchForParamY":ParamZ."a static string".AnotherParamValue."one more string".OneMoreFormValue;
+|Use only String or Params in this fiels. All the Params shold be mapped in autofield with their corresponding form field from which the value will be taken.
 |}
 
 === Configuration parameters ===

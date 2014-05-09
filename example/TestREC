@@ -12,6 +12,6 @@ form=Event
 |recurrentend=Event[EventRecurrentEnd]
 |recurrentunit=Event[EventRecurrentUnit]
 |recurrentperiod=Event[EventRecurrentPeriod]
-|autofield=target:Event[EventTitle];category:Event[EventCategory];type:Event[EventType];contact:Event[EventContact];location:Event[EventLocation];date:Event[EventStartTime]
+|autofield=target:Event[EventTitle];category:Event[EventCategory];type:Event[EventType];contact:Event[EventContact];location:Event[EventLocation];date:Event[EventStartDay]
 |autofill=target:category.type:"Attendance"."Business trip":type."/".location."/".date;target:category.type:"Attendance"."Holiday":type."/".date."/".contact;target:category.type:"Attendance"."Health":type."/".date."/".contact;target:category.type:"Attendance"."Time in lieu":type."/".date."/".contact;target:category.type:"Attendance"."Paid leave":type."/".date."/".contact;target:category.type:"Attendance"."Solidarieta":type."/".date."/".contact
 }}
