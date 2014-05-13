@@ -1,3 +1,4 @@
+<pre>
 {{#reclink:
 form=Event
 |link text=Create event series
@@ -12,6 +13,25 @@ form=Event
 |recurrentend=Event[EventRecurrentEnd]
 |recurrentunit=Event[EventRecurrentUnit]
 |recurrentperiod=Event[EventRecurrentPeriod]
+|new window
 |autofield=target:Event[EventTitle];category:Event[EventCategory];type:Event[EventType];contact:Event[EventContact];location:Event[EventLocation];date:Event[EventStartDay]
 |autofill=target:category.type:"Attendance"."Business trip":type."/".location."/".date;target:category.type:"Attendance"."Holiday":type."/".date."/".contact;target:category.type:"Attendance"."Health":type."/".date."/".contact;target:category.type:"Attendance"."Time in lieu":type."/".date."/".contact;target:category.type:"Attendance"."Paid leave":type."/".date."/".contact;target:category.type:"Attendance"."Solidarieta":type."/".date."/".contact
 }}
+</pre>
+{{#reclink:
+form=Event
+|link text=Create event series
+|link type=button
+|iterator=date
+|startday=Event[EventStartDay]
+|endday=Event[EventEndDay]
+|starttime=Event[EventStartTime]
+|endtime=Event[EventEndTime]
+|isrecurrent=Event[EventRecurrent]
+|recurrentstart=Event[EventRecurrentStart]
+|recurrentend=Event[EventRecurrentEnd]
+|recurrentunit=Event[EventRecurrentUnit]
+|recurrentperiod=Event[EventRecurrentPeriod]
+|new window
+}}
+

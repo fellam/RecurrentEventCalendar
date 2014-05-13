@@ -11,6 +11,7 @@ Where DateValue is Date value in the format dd/mm/yyyy.
 
 Edit the page to see the template text.
 ==Example==
-<nowiki>{{</nowiki>GetEventPageTitleDate|04/05/2014}} = {{GetEventPageTitleDate|04/05/2014}}
-<nowiki>{{</nowiki>GetEventPageTitleDate|24/08/2014}} = {{GetEventPageTitleDate|24/08/2014}}
-</noinclude><includeonly>{{#explode:{{{1}}}|/|2}}{{#explode:{{{1}}}|/|1}}{{#explode:{{{1}}}|/|0}}</includeonly>
+<nowiki>{{</nowiki>GetEventPageTitleDate|2014/04/05}} = {{GetEventPageTitleDate|2014/04/05}}
+
+<nowiki>{{</nowiki>GetEventPageTitleDate|2014/08/24}} = {{GetEventPageTitleDate|2014/08/24}}
+</noinclude><includeonly>{{#explode:{{{1}}}|/|0}}-{{#explode:{{{1}}}|/|1}}-{{#explode:{{{1}}}|/|2}}</includeonly>

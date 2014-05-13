@@ -12,7 +12,7 @@ To create a page with this form click the button below.
 <includeonly>
 <div style="text-align: right; margin-top:-45px; margin-bottom:15px;"> 
 {{{standard input|cancel}}} {{!}} {{{standard input|save|label=Save}}}
-{{{info|page name=Events:<Event[EventCategory]>/ID:<Event[EventType]><unique number;random>|create title=Add new event}}}
+{{{info|page name=Events:{{GetEventPageTitle|<Event[EventStartDay]>|<Event[EventCategory]>|<Event[EventType]>|<Event[EventTitle]>|<Event[EventContact]>|<Event[EventLocation]>}}|create title=Add new event|edit title=Edit event}}}
 </div>
 ----
 {{{for template|Event}}}
@@ -100,10 +100,10 @@ Solidarieta=>DescriptionOptional;
 ----
 {| class="wikitable" style="width:100%;"
 {{TableHeader|100px|middle|middle|center|Start}} 
-{{TableCell||middle|middle|left| {{{field|EventStartDay|input type=datepicker|mandatory}}} {{{field|EventStartTime|input type=timepicker}}} }}
+{{TableCell||middle|middle|left| {{{field|EventStartDay|input type=datepicker|show reset button|show week numbers|week start=1|highlight days of week=6,0|date format=yy/mm/dd|mandatory}}} {{{field|EventStartTime|input type=timepicker|show reset button|interval=15}}} }}
 {{TableTR}}
 {{TableHeader|100px|middle|middle|center|End}} 
-{{TableCell||middle|middle|left| {{{field|EventEndDay|input type=datepicker|mandatory}}} {{{field|EventEndTime|input type=timepicker}}} }}
+{{TableCell||middle|middle|left| {{{field|EventEndDay|input type=datepicker|show reset button|show week numbers|week start=1|highlight days of week=6,0|date format=yy/mm/dd|mandatory}}} {{{field|EventEndTime|input type=timepicker|show reset button|interval=15}}} }}
 |}
 <div id="RecurrentEvent" align="left">
 {| class="wikitable" style="width:100%;"

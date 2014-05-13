@@ -40,7 +40,7 @@ class RECDateIterator extends RECIterator {
 	 */
 	
 	function checkValues ( &$data ){
-		print "data=<div>"; print_r($data); print "</div></br>";
+// 		print "data=<div>"; print_r($data); print "</div></br>";
 		if ( array_key_exists( 'startday', $data ) ) {
 			$startday = $data['startday'];
 			if ( is_string( $startday ) ) {
@@ -59,6 +59,7 @@ class RECDateIterator extends RECIterator {
 				throw new RECException( RECUtils::buildMessage( 'recerror-date-startdaymissing' ) );
 			}
 		}
+		print "startday=<div>"; print_r($startday); print "</div></br>";
 		if ( array_key_exists( 'endday', $data ) ) {
 			$endday = $data['endday'];
 			if ( is_string( $endday ) ) {
@@ -77,6 +78,7 @@ class RECDateIterator extends RECIterator {
 				$endday = $startday;
 			}
 		}
+		print "endday=<div>"; print_r($endday); print "</div></br>";
 		if ( array_key_exists( 'starttime', $data ) && (is_null($starttime) || ($starttime === '')) ) {
 			$starttime = $data['starttime'];
 			if ( is_string( $starttime ) ) {
@@ -223,17 +225,10 @@ class RECDateIterator extends RECIterator {
 			}
 		}
 		$formattedvalues = array();
-		//return values ad format
-// 		print "userDateFormat=".$userDateFormat."</br>";
-// 		print "values=".$values."</br>";
 		foreach ($values as &$value) {
-// 			print "	VAL=".$value."</br>";
 			$date = new DateTime($value);
-// 			print "	DATE=".$value."</br>";
 			$formattedvalues[] = $date->format($userDateFormat);
 		}
-// 		print "formattedvalues=<div>"; print_r($formattedvalues); print "</div></br>";
-// 		print "values=<div>"; print_r($values); print "</div></br>";
 		return $formattedvalues;
 	}
 	

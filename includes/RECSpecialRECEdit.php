@@ -122,8 +122,9 @@ class RECSpecialRECEdit extends SpecialPage {
 	private function evaluateForm( WebRequest &$request ) {
 		global $wgUser, $recgIterators;
 		$userDateFormat = $this->getDateFormat();
+		$eventCalendarDateFormat = "Y/m/d";
 		$requestValues = $_POST;
-		print "requestValues=<div>"; print_r($requestValues); print "</div></br>";
+// 		print "requestValues=<div>"; print_r($requestValues); print "</div></br>";
 		if ( array_key_exists( 'iteratordata', $requestValues ) ) {
 			$iteratorData = FormatJson::decode( $requestValues['iteratordata'], true );
 			unset( $requestValues['iteratordata'] );
@@ -227,9 +228,17 @@ class RECSpecialRECEdit extends SpecialPage {
 		SFAutoeditAPI::addToArray( $requestValues, $iteratorData['isrecurrent'], $iteratorParams['isrecurrent'], true );
 		if ( $iteratorParams['isrecurrent'] === 'No' ) {
 			$iteratorStartValues = $iterator->getValues( $iteratorParams['startday'], $iteratorParams['endday'], $iteratorParams['recurrentunit'], $iteratorParams['recurrentperiod'], $userDateFormat);
+			print "iteratorStartValues=<div>"; var_dump($iteratorStartValues); print "</div></br>";
 			$iteratorEndValues = $iterator->getValues( $iteratorParams['endday'], $iteratorParams['endday'], $iteratorParams['recurrentunit'], $iteratorParams['recurrentperiod'], $userDateFormat);
-			$iteratorParams['startday'] = $iteratorStartValues[0];
-			$iteratorParams['endday'] = $iteratorEndValues[0];
+			print "iteratorEndValues=<div>"; var_dump($iteratorEndValues); print "</div></br>";
+			$sdate = DateTime::createFromFormat('d/m/Y', $iteratorStartValues[0]);
+// 			print "date=<div>"; var_dump($date); print "</div></br>";
+// 			print "userDateFormat=<div>"; var_dump($userDateFormat); print "</div></br>";
+// 			print "startday=<div>"; var_dump($sdate->format($eventCalendarDateFormat)); print "</div></br>";
+			$iteratorParams['startday'] = $sdate->format($eventCalendarDateFormat);
+			$edate = DateTime::createFromFormat('d/m/Y', $iteratorEndValues[0]);
+// 			print "endday=<div>"; var_dump($edate->format($eventCalendarDateFormat)); print "</div></br>";
+			$iteratorParams['endday'] = $edate->format($eventCalendarDateFormat);
 			$iteratorValuesCount = 1;
 		} else if ( $iteratorParams['isrecurrent'] === 'Yes' ) {
 			$iteratorStartValues = $iterator->getValues( $iteratorParams['startday'], $iteratorParams['recurrentend'], $iteratorParams['recurrentunit'], $iteratorParams['recurrentperiod'], $userDateFormat);
@@ -259,19 +268,21 @@ class RECSpecialRECEdit extends SpecialPage {
 				}
 			} 
 		}
-// 		print "requestValues=<div>"; print_r($requestValues); print "</div></br>";
-// 		exit;
 		if ( $iteratorParams['isrecurrent'] === 'Yes' ) {
 			foreach ( $iteratorEndValues as $key => $value ) {
-				SFAutoeditAPI::addToArray( $requestValues, $iteratorData['startday'], $iteratorStartValues[$key], true );
-				SFAutoeditAPI::addToArray( $requestValues, $iteratorData['endday'], $value, true );
-// 				print "YESrequestValues=<div>"; print_r($requestValues); print "</div></br>";
+				$sdate = DateTime::createFromFormat('d/m/Y', $iteratorStartValues[$key]);
+				$edate = DateTime::createFromFormat('d/m/Y',$value);
+				SFAutoeditAPI::addToArray( $requestValues, $iteratorData['startday'], $sdate->format($eventCalendarDateFormat), true );
+				SFAutoeditAPI::addToArray( $requestValues, $iteratorData['endday'], $edate->format($eventCalendarDateFormat), true );
+// 				print "requestValues=<div>"; print_r($requestValues); print "</div></br>";
+// 				exit;
 				wfDebugLog( 'rec', 'Insert RECPageCreationJob' );
 				$job = new RECPageCreationJob( $targetFormTitle, $requestValues );
 				$job->insert();
 			}
 		} else if ( $iteratorParams['isrecurrent'] === 'No' ) {
-// 			print "NOrequestValues=<div>"; print_r($requestValues); print "</div></br>";
+// 			print "requestValues=<div>"; print_r($requestValues); print "</div></br>";
+// 			exit;
 			wfDebugLog( 'rec', 'Insert RECPageCreationJob' );
 			$job = new RECPageCreationJob( $targetFormTitle, $requestValues );
 			$job->insert();
