@@ -5,7 +5,7 @@
 			"Michele.Fella"
 		]
 	},
-	"RecurrentEventCalendaredit": "Recurrent Event Calendar",
+	"recurrenteventcalendaredit": "Recurrent Event Calendar",
 	"RecurrentEventCalendar-desc": "Crea una serie di pagine da un [https://www.mediawiki.org/wiki/Extension:Semantic_Forms Semantic Form]",
 	"recsuccesstitle": "Creazione di pagine $1",
 	"recsuccess": "{{PLURAL:$1|Una pagina|$1 pagine}} saranno create.",

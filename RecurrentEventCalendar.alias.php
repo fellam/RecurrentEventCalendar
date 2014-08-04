@@ -13,10 +13,10 @@ $specialPageAliases = array();
 
 /** English (English) */
 $specialPageAliases['en'] = array(
-	'RecurrentEventCalendarEdit' => array( 'RecurrentEventCalendarEdit' ),
+	'recurrenteventcalendaredit' => array( 'recurrenteventcalendaredit' ),
 );
 
 /** Italian (italiano) */
 $specialPageAliases['it'] = array(
-	'RecurrentEventCalendarEdit' => array( 'ModificaEventiRicorrenti' ),
+	'recurrenteventcalendaredit' => array( 'modificaeventiricorrenti' ),
 );

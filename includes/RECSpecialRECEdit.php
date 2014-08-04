@@ -19,7 +19,7 @@ if ( !defined( 'REC_VERSION' ) ) {
 class RECSpecialRECEdit extends SpecialPage {
 
 	public function __construct() {
-		parent::__construct( 'RecurrentEventCalendarEdit' );
+		parent::__construct( 'recurrenteventcalendaredit' );
 	}
 
 	public function execute( $parameters ) {

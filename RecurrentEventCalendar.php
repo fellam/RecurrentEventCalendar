@@ -62,7 +62,7 @@ $wgAutoloadClasses['RECDateIterator'] = $dir . '/includes/iterators/RECDateItera
 
 
 // register Special page
-$wgSpecialPages['RecurrentEventCalendarEdit'] = 'RECSpecialRECEdit'; # Tell MediaWiki about the new special page and its class name
+$wgSpecialPages['recurrenteventcalendaredit'] = 'RECSpecialRECEdit'; # Tell MediaWiki about the new special page and its class name
 
 // register hook handlers
 
