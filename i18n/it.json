@@ -6,7 +6,7 @@
 		]
 	},
 	"recurrenteventcalendaredit": "Recurrent Event Calendar",
-	"RecurrentEventCalendar-desc": "Crea una serie di pagine da un [https://www.mediawiki.org/wiki/Extension:Semantic_Forms Semantic Form]",
+	"RecurrentEventCalendar-desc": "Crea una serie di pagine da un [https://www.mediawiki.org/wiki/Special:MyLanguage/Extension:Page_Forms Page Form]",
 	"recsuccesstitle": "Creazione di pagine $1",
 	"recsuccess": "{{PLURAL:$1|Una pagina|$1 pagine}} saranno create.",
 	"recsuccess-returntoorigin": "Torna a $1",
